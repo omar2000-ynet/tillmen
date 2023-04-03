@@ -82,7 +82,7 @@ module.exports.requireAuth2 = (req, res, next) => {
           console.log(err);
           res.status(400).json("non Token") 
         } else { 
-            res.send(decodedToken.id);
+            // res.send(decodedToken.id);
             next();       
         }     
       });

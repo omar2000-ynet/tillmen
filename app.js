@@ -12,6 +12,7 @@ const app = express();
 app.use(cookieParser());         
 const corsOptions = {                                        
     origin: 'https://till-2f088.web.app',  
+    // origin: 'http://localhost:3000',  
     credentials: true,   
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
@@ -27,10 +28,10 @@ app.get('*',UserCs.checkUser)// Donc,  sur n'importe quel route où sera le user
 app.get('*',UserCs.checkUser2)// Donc,  sur n'importe quel route où sera le user Client, il y aura un tcheking
 
 app.get('/jwtid2',UserCs.requireAuth2,(req, res)=>{ 
-    // res.status(200).send("res.locals.user._id")
+    res.status(200).send(res.locals.user._id)
 });   
 app.get('/jwtid',UserCs.requireAuth,(req, res)=>{ 
-    // res.status(200).send("res.locals.user._id")
+    res.status(200).send(res.locals.user._id)
 });   
 
 require('./config/bd');
