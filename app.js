@@ -11,7 +11,7 @@ const path = require('path');
 const app = express();            
 app.use(cookieParser());         
 const corsOptions = {                                        
-    origin: 'https://till-2f088.web.app', 
+    origin: 'https://till-2f088.web.app/', 
     credentials: true,   
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
