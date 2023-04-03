@@ -10,15 +10,15 @@ const path = require('path');
 // https://meet.google.com/tmv-hhko-uce?pli=1
 const app = express();      
 app.use(cookieParser());      
-// const corsOptions = {                                    
-//     origin: process.env.CLIENT_URL, 
-//     credentials: true,   
-//     'allowedHeaders': ['sessionId', 'Content-Type'],
-//     'exposedHeaders': ['sessionId'],
-//     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     'preflightContinue': false 
-// }        
-app.use(cors()); 
+const corsOptions = {                                    
+    origin: process.env.CLIENT_URL, 
+    credentials: true,   
+    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'exposedHeaders': ['sessionId'],
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false 
+}        
+app.use(cors(corsOptions)); 
 app.use(json()) 
 app.use(urlencoded({extended:true}))
   
