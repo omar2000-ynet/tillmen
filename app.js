@@ -8,9 +8,9 @@ const cors = require("cors"); // Permet au server de recevoir des requêttes mul
 var cookieParser = require('cookie-parser');
 const path = require('path');
 // https://meet.google.com/tmv-hhko-uce?pli=1
-const app = express();      
-app.use(cookieParser());      
-const corsOptions = {                                      
+const app = express();            
+app.use(cookieParser());         
+const corsOptions = {                                       
     origin: process.env.CLIENT_URL, 
     credentials: true,   
     'allowedHeaders': ['sessionId', 'Content-Type'],
