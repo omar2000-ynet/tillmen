@@ -10,8 +10,8 @@ const path = require('path');
 // https://meet.google.com/tmv-hhko-uce?pli=1
 const app = express();            
 app.use(cookieParser());         
-const corsOptions = {                                       
-    origin: process.env.CLIENT_URL, 
+const corsOptions = {                                        
+    origin: 'https://till-2f088.web.app', 
     credentials: true,   
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
