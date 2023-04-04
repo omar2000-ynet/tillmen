@@ -8,7 +8,7 @@ const cors = require("cors"); // Permet au server de recevoir des requêttes mul
 var cookieParser = require('cookie-parser');
 const path = require('path');
 // https://meet.google.com/tmv-hhko-uce?pli=1
-const app = express();            
+const app = express();              
 app.use(cookieParser());         
 const corsOptions = {                                        
     origin: 'https://till-2f088.web.app',  
@@ -28,10 +28,10 @@ app.get('*',UserCs.checkUser)// Donc,  sur n'importe quel route où sera le user
 app.get('*',UserCs.checkUser2)// Donc,  sur n'importe quel route où sera le user Client, il y aura un tcheking
 
 app.get('/jwtid2',UserCs.requireAuth2,(req, res)=>{ 
-    res.status(200).send(res.locals.user._id)
+    // res.status(200).send(res.locals.user._id)
 });   
 app.get('/jwtid',UserCs.requireAuth,(req, res)=>{ 
-    res.status(200).send(res.locals.user._id)
+    // res.status(200).send(res.locals.user._id)
 });   
 
 require('./config/bd');
