@@ -29,7 +29,7 @@ module.exports.checkUser = (req, res, next) => {
   // Ce middleware vérifi chaque fois si le user est connecté.
   module.exports.requireAuth = (req, res, next) => {
       const token = req.cookies?.jwt; 
-      // console.log(token);
+      console.log("token = "+ token);
       if(token) {  
         jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
           if (err) {
@@ -75,7 +75,7 @@ module.exports.checkUser2 = (req, res, next) => {
 // Ce middleware vérifi chaque fois si le user est connecté.
 module.exports.requireAuth2 = (req, res, next) => {
     const token = req.cookies?.jwt2; 
-    // console.log(token);
+    console.log("token =" + token) ;
     if(token) {  
       jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
         if (err) {
