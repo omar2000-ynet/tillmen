@@ -27,10 +27,10 @@ app.use(urlencoded({extended:true}))
 app.get('*',UserCs.checkUser)// Donc,  sur n'importe quel route où sera le user, il y aura un tcheking
 app.get('*',UserCs.checkUser2)// Donc,  sur n'importe quel route où sera le user Client, il y aura un tcheking
 
-app.get('/jwtid2',UserCs.requireAuth2,(req, res)=>{ 
+app.post('/jwtid2',UserCs.requireAuth2,(req, res)=>{ 
     // res.status(200).send(res.locals.user._id)
 });   
-app.get('/jwtid',UserCs.requireAuth,(req, res)=>{ 
+app.post('/jwtid',UserCs.requireAuth,(req, res)=>{ 
     // res.status(200).send(res.locals.user._id)
 });   
 
