@@ -18,7 +18,7 @@ const corsOptions = {
     'exposedHeaders': ['sessionId'],
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
     'preflightContinue': false 
-}        
+}
 app.use(cors(corsOptions)); 
 app.use(json()) 
 app.use(urlencoded({extended:true}))
