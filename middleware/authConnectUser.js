@@ -16,7 +16,6 @@ module.exports.checkUser = (req, res, next) => {
           let user = await schemaCandidat.findById(decodedToken.id);
           console.log(user?._id + " connecté!");
           res.locals.user = user;
-          // console.log(res.locals.user);
           next();
         }   
       }); 
@@ -40,7 +39,7 @@ module.exports.checkUser = (req, res, next) => {
           }     
         });
       }else{
-        res.send("pas de token");
+        res.send("pas de token_");
       }
   };     
 

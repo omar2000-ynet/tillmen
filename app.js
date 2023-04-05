@@ -33,7 +33,7 @@ app.post('/jwtid2',UserCs.requireAuth2,(req, res)=>{
 app.post('/jwtid',UserCs.requireAuth,(req, res)=>{ 
     // res.status(200).send(res.locals.user._id)
 });   
-
+    
 require('./config/bd');
 //On inclut le fichier des routes nommé : back_tilma,_router
 app.use('/api/tilman/', back_tilman_router);
