@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat');
+const schemaSuggest = require('../model/suggest');
 const fs = require('fs');
 //Ajout des images de profiles pour le client et le candidat
 
@@ -17,6 +18,7 @@ const storage2 = multer.diskStorage({
     }
 })
 const maxsize = 1024 * 1024 * 5;
+const maxsize1 = 1024 * 1024 * 10;
 var uploadc = multer(
      {
        storage:storage2,
@@ -88,16 +90,14 @@ module.exports.uploadProfilClient = async(req, res)=>{
 module.exports.uploadProfilCandidat = async(req, res)=>{
       upload(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
-            res.send(err);
+            res.status(352).send(err);
         }else if(err){ 
-            res.send(err)
+            res.status(350).send(err)
         }
         else{
             const id = req.params.id;
             console.log(id);
             const fileName = id +".jpg";
-             const nom = req.body.nom;
-             console.log(nom)  
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
@@ -152,22 +152,7 @@ module.exports.acheInscrMetier= async(req, res)=>{
     })
     .catch(err=>res.send(err))
 }
-module.exports.historiqueTravaux= async(req, res)=>{
-    const historiqueTravaux = req.body.historiqueTravaux;
-    const id = req.params.id;
-   await schemaCandidat.findByIdAndUpdate(
-        id, 
-        {
-            $addToSet:{ 
-                historiqueTravaux:historiqueTravaux
-            }
-        },
-        {new:true, upsert:true} 
-    )
-    .then((data) => res.send(data))
-    .catch((err) => res.status(500).send({ message: err }))
 
-}
 module.exports.acheInscr1= async(req, res)=>{
     const {description, disponibilite} = req.body;
     const id = req.params.id;
@@ -314,59 +299,35 @@ module.exports.disponible= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
 }
+
 //Chargement du CV et Certivicat
-const storage3 = multer.diskStorage({
+const storageCV = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, `${__dirname}/../../client/public/imageCV/`);  
+        cb(null, `${__dirname}/../uploads/imageCV/`);    
     },
     filename:(req,file, cb)=>{
+        
         const id = req.params.id;
-        const fileName = id +".jpg";
+        const fileName = id +".pdf";
         cb(null, fileName);
        
     }
 })
-const storage4 = multer.diskStorage({
-    destination:(req, file, cb)=>{
-        cb(null, `${__dirname}/../../client/public/imageCertif/`);  
-    },
-    filename:(req,file, cb)=>{
-        const id = req.params.id;
-        const fileName = id +".jpg";
-        cb(null, fileName);
-       
-    }
-});
 var uploadCV = multer(
     {
-      storage:storage3,
+      storage:storageCV,
       fileFilter:(req, file,cb)=>{
-        if(file.mimetype == "image/jpg" ||
-            file.mimetype == "image/png" ||
-            file.mimetype == "image/jpeg"){
+        console.log(file)
+        if(
+            // file.mimetype == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+            file.mimetype == "application/pdf"){
             cb(null, true)
         }else{
             cb(null, false);
             cb(new Error("Format invalid"));
         }
       },
-      limits:{fileSize:maxsize}
-}).single('image');
-
-var uploadCertif = multer(
-     {
-       storage:storage4,
-       fileFilter:(req, file,cb)=>{
-         if(file.mimetype == "image/jpg" ||
-             file.mimetype == "image/png" ||
-             file.mimetype == "image/jpeg"){
-             cb(null, true)
-         }else{
-             cb(null, false);
-             cb(new Error("Format invalid"));
-         }
-       },
-       limits:{fileSize:maxsize}
+      limits:{fileSize:maxsize1}
 }).single('image');
 
 module.exports.uploadCV_ = async(req, res)=>{
@@ -377,13 +338,13 @@ module.exports.uploadCV_ = async(req, res)=>{
           res.send(err)
       }else{
           const id = req.params.id;
-          const fileName = id +".jpg";
+          const fileName = id +".pdf";
            console.log(id)
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
                   {
-                      $set:{cv:"./imageCV/"+fileName}
+                      $set:{cv:"uploads/imageCV/"+fileName}
                   },
                   {
                       new:true, upset:true
@@ -398,20 +359,64 @@ module.exports.uploadCV_ = async(req, res)=>{
       }
     })
 }
+
+// D'autres document/Certification 
+const storage4 = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null, `${__dirname}/../uploads/imageCertif/`);  
+    },
+    filename:(req,file, cb)=>{
+        const id = req.params.id;
+        var dt =new Date();
+        const y = dt.getFullYear();
+        const d = dt.getDate();
+        const  m = dt.getMonth();
+        const mi = dt.getMinutes();
+        const dts = y+d+m+mi;
+        const fileName = id+dts+".pdf";
+        cb(null, fileName);
+    }
+});
+var uploadCertif = multer(
+    {
+      storage:storage4,
+      fileFilter:(req, file,cb)=>{
+        if(file.mimetype == "application/pdf"){
+            cb(null, true)
+        }else{
+            cb(null, false);
+            cb(new Error("Format invalid"));
+        }
+      },
+      limits:{fileSize:maxsize1}
+}).single('image');
+
 module.exports.uploadCertif_ = async(req, res)=>{
       uploadCertif(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.send(err);
       }else if(err){
-          res.send(err)
+          res.send(err);
       }else{
           const id = req.params.id;
-          const fileName = id +".jpg";
+          var dt =new Date();
+          const y = dt.getFullYear();
+          const d = dt.getDate();
+          const  m = dt.getMonth();
+          const mi = dt.getMinutes();
+          const dts = y+d+m+mi;
+          const titreDoc = req.body.titreDoc;
+          const fileName = id+dts +".pdf";
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
                   {
-                      $set:{certification:"./imageDiplome/"+fileName}
+                      $addToSet:{
+                        docCertification:{
+                            titreDoc : titreDoc,
+                            pathdoc: "uploads/imageCertif/"+fileName
+                        }
+                     }
                   },
                   {
                       new:true, upset:true,  setDefaultsOnInsert: true 
@@ -534,4 +539,81 @@ module.exports.modification2= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
 }
- 
+
+
+const storage5 = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null, `${__dirname}/../uploads/imageHisto`);  
+    },
+    filename:(req,file, cb)=>{
+        const id = req.params.id;
+        var dt =new Date();
+        const y = dt.getFullYear();
+        const d = dt.getDate();
+        const  m = dt.getMonth();
+        const mi = dt.getMinutes();
+        const dts = y+d+m+mi;
+        const fileName = id+dts +".jpg";
+        cb(null, fileName);
+    }
+}) 
+const upload5 = multer(
+ {
+   fileFilter:(req, file,cb)=>{
+     if(file.mimetype == "image/jpg" ||
+         file.mimetype == "image/png" ||
+         file.mimetype == "image/jpeg"){
+         cb(null, true)
+     }else{
+         cb(null, false);
+         cb(new Error("Format invalid"));
+     }
+   },
+   storage:storage5,
+   limits:{fileSize:maxsize}
+}).single('image');
+
+//Historique
+module.exports.uploadHistorique = async(req, res)=>{
+    upload5(req, res, async(err)=>{
+      if(err instanceof multer.MulterError){
+          res.status(352).send(err);
+      }else if(err){ 
+          res.status(350).send(err)
+      }
+      else{
+          const id = req.params.id;
+          var dt =new Date();
+          const y = dt.getFullYear();
+          const d = dt.getDate();
+          const  m = dt.getMonth();
+          const mi = dt.getMinutes();
+          const dts = y+d+m+mi;
+          const description = req.body.description;
+          const fileName = id+dts +".jpg";
+          try {            
+              schemaCandidat.findByIdAndUpdate(  
+                  id, 
+                  {  
+                      $addToSet:{
+                        historiqueTravaux:{
+                            picture:"uploads/imageHisto/"+fileName,
+                            date : dt,
+                            description: description
+                         }
+                       }
+                  },
+                  { 
+                      new:true, upset:true 
+                  }
+              )
+              .then((data)=>res.send(data))
+              .catch((err)=>res.send(err))
+          } catch (err) {
+              res.status(200).send({message: err})
+          }  
+      }
+    })
+}
+
+

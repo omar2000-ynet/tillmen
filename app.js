@@ -11,8 +11,7 @@ const path = require('path');
 const app = express();              
 app.use(cookieParser());         
 const corsOptions = {                                        
-    origin: 'https://till-2f088.web.app',  
-    // origin: 'http://localhost:3000',  
+    origin: ['https://till-2f088.web.app','http://localhost:3000'],   
     credentials: true,   
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],

@@ -133,12 +133,29 @@ const schemaCandidat = mongoose.Schema({
             }
         ]
     },
-    historiqueTravaux:[String],
+    historiqueTravaux:{
+        type:[
+            {
+                description:String,
+                picture: {
+                    type: String,
+                    default: "./tillmenImg/logoTill.png"
+                },
+                date:Date
+            }
+        ]
+    }, 
     cv:{
         type:String
     },
-    certification: String,
-    docCertification:[String],
+    docCertification:{
+        type:[
+           { 
+              titreDoc:String,
+              pathdoc:String
+           }
+        ]
+    },
     post:{
         type:[ 
             {
@@ -163,6 +180,9 @@ const schemaCandidat = mongoose.Schema({
         trim: true
     },
     date_creation: Date
+},
+{
+    timestamps: true,
 })
 schemaCandidat.pre("save", async function(next){
     const salt = await bcrypt.genSalt();

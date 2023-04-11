@@ -31,11 +31,11 @@ router.post('/service/:id',uploadController.acheInscrService);
 router.post('/langue/:id',uploadController.acheInscrLangue);
 router.post('/etude/:id',uploadController.acheInscrEtude);
 router.post('/competence/:id',uploadController.acheInscreCompetence);
-router.post('/historiqueTravaux/:id',uploadController.historiqueTravaux);
+router.post('/historiqueTravaux/:id',uploadController.uploadHistorique);
 router.post('/modification2/:id',uploadController.modification2);
 router.post('/modification/:id',uploadController.modification);
-router.get('/cv/:id',uploadController.uploadCV_);
-router.get('/certificat/:id',uploadController.uploadCertif_);
+router.post('/cv/:id',uploadController.uploadCV_);
+router.post('/certificat/:id',uploadController.uploadCertif_);
 router.get('/licenceC/:id',uploadController.licenceC);
 router.get('/licence/:id',uploadController.licence);
 router.get('/disponible/:id',uploadController.disponible);
@@ -55,5 +55,9 @@ router.post('/parcommune',recupereDonnees.parcommune);
 router.post('/parmetieretcommune',recupereDonnees.parmetieretcommune);
 router.post('/parmetieretnomouprenom',recupereDonnees.parmetieretnomouprenom);
 router.post('/nomouprenom',recupereDonnees.nomouprenom);
+
+//Suggestion 
+router.post('/suggestion',controlUser.ajouterSuggestion);
+
 
 module.exports = router;       

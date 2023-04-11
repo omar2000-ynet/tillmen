@@ -1,5 +1,6 @@
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat'); 
+const schemaSuggest = require('../model/suggest'); 
 const jwt = require('jsonwebtoken');
 
  const ControlErrs = require('../utile/ControlErreur');
@@ -165,3 +166,18 @@ module.exports.deconnexionCandidat = (req, res)=>{
        res.cookie('jwt', '', { maxAge: 1 });
        res.redirect('/');
 }
+const dt =new Date();
+module.exports.ajouterSuggestion = async(req, res)=>{
+   const {message} = req.body;
+   const suggest = await new schemaSuggest({
+      message:message, 
+      date:dt, 
+   })
+   try {
+      const suggests = await suggest.save();
+      return res.status(201).send(suggests);
+   } catch (err) {
+        const errors = ControlErrs.ControlErr(err);
+        return res.status(400).send(errors);
+   }
+  }
