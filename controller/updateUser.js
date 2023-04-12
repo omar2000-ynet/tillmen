@@ -9,8 +9,8 @@ const fs = require('fs');
 const storage2 = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `${__dirname}/../uploads/imageProfil/`);  
-        cb(null, `./uploads/imageProfil/`);  
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
+        // cb(null, `./uploads/imageProfil/`);  
+        cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
     },
     filename:(req,file, cb)=>{
         const id = req.params.id;
@@ -38,9 +38,9 @@ var uploadc = multer(
          }).single('image');
 const storage = multer.diskStorage({
         destination:(req, file, cb)=>{
-            // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat`);  
+            cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat`);  
             // cb(null, `${__dirname}/../uploads/imageProfilCadidat`);  
-            cb(null, `./uploads/imageProfilCadidat`);  
+            // cb(null, `./uploads/imageProfilCadidat`);  
         },
         filename:(req,file, cb)=>{
             const id = req.params.id; 
@@ -307,9 +307,9 @@ module.exports.disponible= async(req, res)=>{
 //Chargement du CV et Certivicat
 const storageCV = multer.diskStorage({
     destination:(req, file, cb)=>{
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
+        cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
         // cb(null, `${__dirname}/../uploads/imageCV/`);    
-        cb(null, `./uploads/imageCV/`);    
+        // cb(null, `./uploads/imageCV/`);    
     },
     filename:(req,file, cb)=>{
         
@@ -550,8 +550,8 @@ module.exports.modification2= async(req, res)=>{
 
 const storage5 = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, `./uploads/imageHisto`);  
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
+        // cb(null, `./uploads/imageHisto`);  
+        cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
         // cb(null, `ageHisto`);  
     },
     filename:(req,file, cb)=>{
