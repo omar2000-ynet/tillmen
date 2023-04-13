@@ -8,13 +8,13 @@ const fs = require('fs');
 
 const storage2 = multer.diskStorage({
     destination:(req, file, cb)=>{
-        // cb(null, `${__dirname}/../uploads/imageProfil/`);  
-        cb(null, `./uploads/imageProfil/`);  
+        cb(null, `${__dirname}/../uploads/imageProfil/`);  
+        // cb(null, `./uploads/imageProfil/`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
     },
     filename:(req,file, cb)=>{
         const id = req.params.id;
-        const fileName = id +".jpg";
+        const fileName = id+".jpg";
         cb(null, fileName);
        
     }
@@ -38,13 +38,13 @@ var uploadc = multer(
          }).single('image');
 const storage = multer.diskStorage({
         destination:(req, file, cb)=>{
-            // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat`);  
-            // cb(null, `${__dirname}/../uploads/imageProfilCadidat`);  
-            cb(null, `./uploads/imageProfilCadidat`);  
+            // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
+            cb(null, `${__dirname}/../uploads/imageProfilCadidat`);  
+            // cb(null, `./../uploads/imageProfilCadidat`);  
         },
         filename:(req,file, cb)=>{
             const id = req.params.id; 
-            const fileName = id +".jpg";
+            const fileName = id+".jpg";
             cb(null, fileName);
         }
     })
@@ -308,13 +308,13 @@ module.exports.disponible= async(req, res)=>{
 const storageCV = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
-        // cb(null, `${__dirname}/../uploads/imageCV/`);    
-        cb(null, `./uploads/imageCV/`);    
+        cb(null, `${__dirname}/../uploads/imageCV/`);    
+        // cb(null, `./uploads/imageCV/`);    
     },
     filename:(req,file, cb)=>{
         
         const id = req.params.id;
-        const fileName = id +".pdf";
+        const fileName = id+".pdf";
         cb(null, fileName);
        
     }
@@ -370,7 +370,8 @@ module.exports.uploadCV_ = async(req, res)=>{
 const storage4 = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `ageCertif/`);  
-        cb(null, `$https://tillmenbackend.onrender.com/uploads/imageCertif/`);  
+        cb(null, `${__dirname}/../uploads/imageCertif/`);  
+        // cb(null, `$https://tillmenbackend.onrender.com/uploads/imageCertif/`);  
     },
     filename:(req,file, cb)=>{
         const id = req.params.id;
@@ -550,7 +551,8 @@ module.exports.modification2= async(req, res)=>{
 
 const storage5 = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, `./uploads/imageHisto`);  
+        cb(null, `${__dirname}/../uploads/imageHisto`);  
+        // cb(null, `./uploads/imageHisto`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
         // cb(null, `ageHisto`);  
     },
