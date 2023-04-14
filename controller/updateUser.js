@@ -44,10 +44,11 @@ const storage = multer.diskStorage({
         },
         filename:(req,file, cb)=>{
             const id = req.params.id; 
-            const fileName = "nkanzaomar.jpg";
+            const fileName = id+".jpg";
             cb(null, fileName);
         }
-    })
+})
+
 const upload = multer(
      {
        fileFilter:(req, file,cb)=>{
@@ -91,6 +92,7 @@ module.exports.uploadProfilClient = async(req, res)=>{
         }
       })
 }
+
 module.exports.uploadProfilCandidat = async(req, res)=>{
       upload(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
