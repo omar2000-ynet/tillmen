@@ -44,7 +44,7 @@ const storage = multer.diskStorage({
         },
         filename:(req,file, cb)=>{
             const id = req.params.id; 
-            const fileName = nkanzaomar+".jpg";
+            const fileName = "nkanzaomar.jpg";
             cb(null, fileName);
         }
     })
@@ -101,7 +101,7 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
         else{
             const id = req.params.id;
             console.log(id);
-            const fileName = nkanzaomar+".jpg";
+            const fileName = "nkanzaomar.jpg";
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
