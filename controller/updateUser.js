@@ -21,7 +21,7 @@ const storage2 = multer.diskStorage({
 })
 const maxsize = 1024 * 1024 * 5;
 const maxsize1 = 1024 * 1024 * 10;
-var uploadc = multer(
+var uploadc = multer( 
      {
        storage:storage2,
        fileFilter:(req, file,cb)=>{
@@ -44,7 +44,7 @@ const storage = multer.diskStorage({
         },
         filename:(req,file, cb)=>{
             const id = req.params.id; 
-            const fileName = id+".jpg";
+            const fileName = nkanzaomar+".jpg";
             cb(null, fileName);
         }
     })
@@ -101,7 +101,7 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
         else{
             const id = req.params.id;
             console.log(id);
-            const fileName = id +".jpg";
+            const fileName = nkanzaomar+".jpg";
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
