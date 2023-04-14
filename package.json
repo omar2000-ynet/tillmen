@@ -2,9 +2,9 @@
   "name": "tillman",
   "version": "1.0.0",
   "description": "tillman project",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
     "test": "start",
     "heroku-postbuild":"cd client && npm install && npm run build"
   },
