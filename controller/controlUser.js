@@ -6,27 +6,37 @@ const jwt = require('jsonwebtoken');
  const ControlErrs = require('../utile/ControlErreur');
 
 module.exports.inscrireClient = async(req, res)=>{
- const {nom, prenom, genre, lieu_nais, date_nais, email,telephone,adresse, password} = req.body;
- const client = await new schemaClient({
-    nom:nom, 
-    prenom:prenom, 
-    genre:genre, 
-    lieu_nais:lieu_nais, 
-    date_nais:date_nais, 
-    email:email, 
-    telephone: telephone,
-    adresse: adresse,
-    password:password
- })
- try {
-    const clients = await client.save();
-    return res.status(201).send(clients);
- } catch (err) {
-      const errors = ControlErrs.ControlErr(err);
-      return res.status(400).send(errors);
- }
+   try {
+  
+         const {nom, prenom, genre, lieu_nais, date_nais, email,telephone,adresse, password} = req.body;
+         const client = await new schemaClient({
+            nom:nom, 
+            prenom:prenom, 
+            genre:genre, 
+            lieu_nais:lieu_nais, 
+            date_nais:date_nais, 
+            email:email, 
+            telephone: telephone,
+            adresse: adresse,
+            password:password
+         })
+         try {
+            const clients = await client.save();
+            return res.status(201).send(clients);
+         } catch (err) {
+               const errors = ControlErrs.ControlErr(err);
+               return res.status(400).send(errors);
+         }
+
+     
+   } catch (error) {
+        res.send(error) 
+   }
 }
 module.exports.inscrireClientEntreprise = async(req, res)=>{
+
+   try {
+      
  const {nom, prenom, genre, nom_entreprise, date_creation, email,telephone,adresse, password} = req.body;
  const client = await new schemaClient({
     nom:nom, 
@@ -46,9 +56,14 @@ module.exports.inscrireClientEntreprise = async(req, res)=>{
       const errors = ControlErrs.ControlErr(err);
       return res.status(400).send(errors);
  }
+   } catch (error) {
+      res.send(error)  
+   }
 }
 //Inscription Candidat
 module.exports.inscrireCandidat = async(req, res)=>{
+   try {
+      
  const {nom, prenom, genre, lieu_naiss, date_naiss, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_vilage,num_parc, password} = req.body;
  const candidat = await new schemaCandidat({
     nom:nom, 
@@ -76,8 +91,13 @@ module.exports.inscrireCandidat = async(req, res)=>{
    const errors = ControlErrs.ControlErr(err);
    return res.status(400).send(errors); 
  }
+   } catch (error) {
+      res.send(error)  
+   }
 }
 module.exports.inscrireCandidatEntreprise = async(req, res)=>{
+   try {
+      
  const {nom, prenom, genre, nom_entreprise, date_creation, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_village,num_parc, password} = req.body;
  const candidat = await new schemaCandidat({
     nom_entreprise:nom_entreprise, 
@@ -105,6 +125,9 @@ module.exports.inscrireCandidatEntreprise = async(req, res)=>{
    const errors = ControlErrs.ControlErr(err);
    return res.status(400).send(errors); 
  }
+   } catch (error) {
+      res.send(error)  
+   }
 }
 
 const maxAge = 365 * 24 * 60 * 60 * 1000; //expire après 3 jours
@@ -115,6 +138,8 @@ const createToken = (id) =>{
 }; 
 
 module.exports.connexionClient = async(req, res)=>{
+   try {
+      
    const {email, password} = req.body;                                                                                                     
    try{ 
       const user = await schemaClient.login(email, password);
@@ -134,13 +159,23 @@ module.exports.connexionClient = async(req, res)=>{
    } catch(err){
         res.status(400).send(err);
    }
+   } catch (error) {
+      res.send(error)  
+   }
 }
 
 module.exports.deconnexionClient = (req, res)=>{
+   try {
+      
        res.cookie('jwt', '', { maxAge: 1 });
        res.redirect('/');
+   } catch (error) {
+      res.send(error)  
+   }
 }
 module.exports.connexionCandidat = async(req, res)=>{
+   try {
+      
    const {email, password} = req.body;                                                                                                     
    try{ 
       const user = await schemaCandidat.login(email, password);
@@ -160,14 +195,24 @@ module.exports.connexionCandidat = async(req, res)=>{
    } catch(err){ 
         res.status(400).send(err);
    } 
+   } catch (error) {
+      res.send(error)  
+   }
 }
 
 module.exports.deconnexionCandidat = (req, res)=>{
+   try {
+      
        res.cookie('jwt', '', { maxAge: 1 });
        res.redirect('/');
+   } catch (error) {
+      res.send(error)  
+   }
 }
 const dt =new Date();
 module.exports.ajouterSuggestion = async(req, res)=>{
+   try {
+      
    const {message} = req.body;
    const suggest = await new schemaSuggest({
       message:message, 
@@ -179,5 +224,8 @@ module.exports.ajouterSuggestion = async(req, res)=>{
    } catch (err) {
         const errors = ControlErrs.ControlErr(err);
         return res.status(400).send(errors);
+   }
+   } catch (error) {
+      res.send(error)  
    }
   }

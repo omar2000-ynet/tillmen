@@ -103,35 +103,51 @@ module.exports.parcommune=async(req, res)=>{
     }
 }
 module.exports.parmetieretcommune=async(req, res)=>{
-    const {metier,commune} = req.body;
-    const data = await schemaCandidat.find({$and:[{metiers:{$all:[{$elemMatch:{'metier':metier}}]}}, {"adresse.commune_secteur":commune}]})
-    const All = [];
-    for (let j = 0; j < data.length; j++) {
-        if(data[j]?.description){
-           All.push(data[j])
+    try {
+   
+        const {metier,commune} = req.body;
+        const data = await schemaCandidat.find({$and:[{metiers:{$all:[{$elemMatch:{'metier':metier}}]}}, {"adresse.commune_secteur":commune}]})
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+            if(data[j]?.description){
+            All.push(data[j])
+            }
         }
+        res.send(All);
+         
+    } catch (error) {
+            
     }
-    res.send(All);
 }
 module.exports.parmetieretnomouprenom=async(req, res)=>{
-    const {metier,nom} = req.body;
-    const data = await schemaCandidat.find({$and:[{metiers:{$all:[{$elemMatch:{'metier':metier}}]}}, {$or:[{'nom':exp(nom)},{'prenom':exp(nom)}]}]})
-    const All = [];
-    for (let j = 0; j < data.length; j++) {
-        if(data[j]?.description){
-           All.push(data[j])
+    try {
+        const {metier,nom} = req.body;
+        const data = await schemaCandidat.find({$and:[{metiers:{$all:[{$elemMatch:{'metier':metier}}]}}, {$or:[{'nom':exp(nom)},{'prenom':exp(nom)}]}]})
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+            if(data[j]?.description){
+            All.push(data[j])
+            }
         }
+        res.send(All);
+    } catch (error) {
+           res.send(error)  
     }
-    res.send(All);
 }
 module.exports.nomouprenom=async(req, res)=>{
-    const {nom} = req.body;
-    const data = await schemaCandidat.find({$or:[{'nom':exp(nom)},{'prenom':exp(nom)}]})
-    const All = [];
-    for (let j = 0; j < data.length; j++) {
-        if(data[j]?.description){
-           All.push(data[j])
+  try {
+     
+        const {nom} = req.body;
+        const data = await schemaCandidat.find({$or:[{'nom':exp(nom)},{'prenom':exp(nom)}]})
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+            if(data[j]?.description){
+            All.push(data[j])
+            }
         }
+        res.send(All);
+  
+    } catch (error) {
+        res.send(error);
     }
-    res.send(All);
 }

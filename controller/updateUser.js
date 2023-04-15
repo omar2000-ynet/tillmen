@@ -65,6 +65,9 @@ const upload = multer(
        limits:{fileSize:maxsize}
 }).single('image');
 module.exports.uploadProfilClient = async(req, res)=>{
+  
+    try {
+    
       uploadc(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
             res.send(err);
@@ -91,9 +94,14 @@ module.exports.uploadProfilClient = async(req, res)=>{
             
         }
       })
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 module.exports.uploadProfilCandidat = async(req, res)=>{
+    try {
+  
       upload(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
             res.status(352).send(err);
@@ -121,9 +129,14 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
             }  
         }
       })
+  } catch (error) {
+      console.log(error)
+  }
 }
 //Achevement de l'inscription du candidat
 module.exports.acheInscrMetier= async(req, res)=>{
+    try {
+  
     const {metier,experience} = req.body;
     const id = req.params.id;
 
@@ -157,9 +170,14 @@ module.exports.acheInscrMetier= async(req, res)=>{
         }
     })
     .catch(err=>res.send(err))
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 module.exports.acheInscr1= async(req, res)=>{
+    try {
+  
     const {description, disponibilite} = req.body;
     const id = req.params.id;
    await schemaCandidat.findByIdAndUpdate(
@@ -174,8 +192,13 @@ module.exports.acheInscr1= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 module.exports.acheInscrService= (req, res)=>{
+    try {
+  
     const {service} = req.body;
     const id = req.params.id;
     schemaCandidat.findByIdAndUpdate(
@@ -188,9 +211,14 @@ module.exports.acheInscrService= (req, res)=>{
         {new:true, upsert:true}
     ).then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 
 }
 module.exports.acheInscrLangue= (req, res)=>{
+    try {
+  
     const {langue,niveau} = req.body;
     const id = req.params.id;
     schemaCandidat.findById(
@@ -223,8 +251,13 @@ module.exports.acheInscrLangue= (req, res)=>{
     })
     .catch(err=>res.send(err))
    
+  } catch (error) {
+      console.log(error)
+  }
 }
 module.exports.acheInscrEtude= (req, res)=>{
+    try {
+  
     const {etablissement,AnneeEntree,anneeSortie,titreObtenu} = req.body;
     const id = req.params.id;
     schemaCandidat.findByIdAndUpdate(
@@ -244,8 +277,13 @@ module.exports.acheInscrEtude= (req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
 
+  } catch (error) {
+      console.log(error)
+  }
 }
 module.exports.acheInscreCompetence= (req, res)=>{
+    try {
+  
     const {competence} = req.body;
     const id = req.params.id;
     schemaCandidat.findByIdAndUpdate(
@@ -258,9 +296,14 @@ module.exports.acheInscreCompetence= (req, res)=>{
         {new:true, upsert:true}
     ).then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 //Acceptation de la licence par le candidat
 module.exports.licence= async(req, res)=>{
+    try {
+  
     const id = req.params.id;
     await schemaCandidat.findByIdAndUpdate(
         id,
@@ -273,9 +316,14 @@ module.exports.licence= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 //Acceptation de la licence par le client
 module.exports.licenceC= async(req, res)=>{
+    try {
+  
     const id = req.params.id;
     await schemaClient.findByIdAndUpdate(
         id,
@@ -288,9 +336,14 @@ module.exports.licenceC= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 module.exports.disponible= async(req, res)=>{
+    try {
+  
     const id = req.params.id;
     const disponible = req.body.disponible;
     await schemaCandidat.findByIdAndUpdate(
@@ -304,6 +357,9 @@ module.exports.disponible= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 //Chargement du CV et Certivicat
@@ -339,6 +395,8 @@ var uploadCV = multer(
 }).single('image');
 
 module.exports.uploadCV_ = async(req, res)=>{
+    try {
+  
     uploadCV(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.send(err);
@@ -366,6 +424,9 @@ module.exports.uploadCV_ = async(req, res)=>{
           
       }
     })
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 // D'autres document/Certification 
@@ -402,6 +463,8 @@ var uploadCertif = multer(
 }).single('image');
 
 module.exports.uploadCertif_ = async(req, res)=>{
+    try {
+  
       uploadCertif(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.send(err);
@@ -440,6 +503,9 @@ module.exports.uploadCertif_ = async(req, res)=>{
           
       }
     })
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 //Mise à jour du document du candidat
@@ -464,6 +530,8 @@ module.exports.rep_quest_secur = async(req, res)=>{
 }
 
 module.exports.projet = async(req, res)=>{
+    try {
+  
     const id = req.params.id;
     const {temps_projet,competences,taches, duree_projet, mode_paiement,candidat,dateCreation} = req.body;
      await schemaClient.findByIdAndUpdate(
@@ -487,10 +555,15 @@ module.exports.projet = async(req, res)=>{
      )
      .then(data=>res.status(200).send(data))
      .catch(err=>res.send(err))
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 //Update des modification du candidat
 module.exports.modification= async(req, res)=>{
+    try {
+  
     const {nom,prenom, genre,lieu_naiss,date_naiss,disponible,disponibilite, pays,province,ville_territoire,commune_secteur,quartier_groupement, avenue_village,num_parc} = req.body;
     const id = req.params.id;
     await schemaCandidat.findByIdAndUpdate(
@@ -519,9 +592,14 @@ module.exports.modification= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 //Update des modification du candidat
 module.exports.modification2= async(req, res)=>{
+    try {
+  
     const {nom,prenom, genre,disponible,disponibilite, pays,province,ville_territoire,commune_secteur,quartier_groupement, avenue_village,num_parc} = req.body;
     const id = req.params.id;
     await schemaCandidat.findByIdAndUpdate(
@@ -548,6 +626,9 @@ module.exports.modification2= async(req, res)=>{
     )
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 
@@ -588,6 +669,8 @@ const upload5 = multer(
 
 //Historique
 module.exports.uploadHistorique = async(req, res)=>{
+    try {
+  
     upload5(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.status(352).send(err);
@@ -627,6 +710,9 @@ module.exports.uploadHistorique = async(req, res)=>{
           }  
       }
     })
+  } catch (error) {
+      console.log(error)
+  }
 }
 
 
