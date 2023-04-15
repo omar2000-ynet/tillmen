@@ -10,71 +10,97 @@ const exp =(exp)=>{
 
 //Recupération de l'ID d'un candidat pas son Id
 module.exports.candidParId=(req, res)=>{
-    const id = req.params.id;
-    schemaCandidat.findById(
-        id 
-    )
-    .then(data=>{
-        res.send(data)
-    })
-    .catch(err=>res.send(err))
+    try {
+        const id = req.params.id;
+        schemaCandidat.findById(
+            id 
+        )
+        .then(data=>{
+            res.send(data)
+        })
+        .catch(err=>res.send(err))
+       
+    } catch (error) {
+        res.send(error);
+    }
 }
 
 //Recupération de l'ID d'un client pas son Id
 module.exports.clientParId=(req, res)=>{
-    const id = req.params.id;
-    schemaClient.findById(
-        id 
-    )
-    .then(data=>{
-        res.send(data)
-    })
-    .catch(err=>res.send(err))
+    try {   
+        const id = req.params.id;
+        schemaClient.findById(
+            id 
+        )
+        .then(data=>{
+            res.send(data)
+        })
+        .catch(err=>res.send(err))
+         
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 //Recupération de tous les documents de la collection des candidats
 module.exports.tousLesDoc= async(req, res)=>{
-   const data=await schemaCandidat.find();
-   const All = [];
-   for (let j = 0; j < data.length; j++) {
-        if(data[j]?.description){
-           All.push(data[j])
+    try {
+        const data=await schemaCandidat.find();
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+                if(data[j]?.description){
+                All.push(data[j])
+                }
         }
-   }
-    res.send(All)
-   
+         res.send(All)
+    } catch (error) {
+        res.send(error);
+    }
 }
 //Recupération de tous les documents de la collection des clients
 module.exports.tousLesDocClient=(req, res)=>{
-    schemaClient.find()
-    .then(data=>{
-        res.send(data)
-    })
-    .catch(err=>res.send(err))
+    try {
+        schemaClient.find()
+        .then(data=>{
+            res.send(data)
+        })
+        .catch(err=>res.send(err))    
+    } catch (error) {
+            res.send(error)
+    }
 }
 module.exports.parmetier= async(req, res)=>{
-    const met = req.body.metier; 
-    const data = await schemaCandidat.find({metiers:{$all:[{$elemMatch:{'metier':met}}]}})
-    const All = []; 
-    if(data){
-         for (let j = 0; j < data.length; j++) {
-                if(data[j]?.description){
-                   All.push(data[j]) 
-                }
-        }
-        res.send(All);
-    } 
+    try {
+        const met = req.body.metier; 
+        const data = await schemaCandidat.find({metiers:{$all:[{$elemMatch:{'metier':met}}]}})
+        const All = []; 
+        if(data){
+            for (let j = 0; j < data.length; j++) {
+                    if(data[j]?.description){
+                    All.push(data[j]) 
+                    }
+            }
+            res.send(All);
+        } 
+    } catch (error) {
+          res.send(error);
+    }
 } 
 module.exports.parcommune=async(req, res)=>{
-    const commune = req.body.commune;
-    const data = await schemaCandidat.find({"adresse.commune_secteur":commune})
-    const All = [];
-    for (let j = 0; j < data.length; j++) {
-        if(data[j]?.description){
-           All.push(data[j])
+    try {
+        const commune = req.body.commune;
+        const data = await schemaCandidat.find({"adresse.commune_secteur":commune})
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+            if(data[j]?.description){
+            All.push(data[j])
+            }
         }
-   }
-    res.send(All);
+        res.send(All);
+         
+    } catch (error) {
+           res.send(error);  
+    }
 }
 module.exports.parmetieretcommune=async(req, res)=>{
     const {metier,commune} = req.body;
