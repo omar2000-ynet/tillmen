@@ -8,8 +8,8 @@ const fs = require('fs');
 
 const storage2 = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, `${__dirname}/../uploads/imageProfil/`);  
-        // cb(null, `./uploads/imageProfil/`);  
+        // cb(null, `${__dirname}/../uploads/imageProfil/`);  
+        cb(null, `./uploads/imageProfil/`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
     },
     filename:(req,file, cb)=>{
@@ -36,34 +36,7 @@ var uploadc = multer(
        },
        limits:{fileSize:maxsize}
          }).single('image');
-const storage = multer.diskStorage({
-        destination:(req, file, cb)=>{
-            // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
-            cb(null, `${__dirname}/../uploads/imageProfilCadidat`);  
-            // cb(null, `./../uploads/imageProfilCadidat`);  
-        },
-        filename:(req,file, cb)=>{
-            const id = req.params.id; 
-            const fileName = id+".jpg";
-            cb(null, fileName);
-        }
-})
 
-const upload = multer(
-     {
-       fileFilter:(req, file,cb)=>{
-         if(file.mimetype == "image/jpg" ||
-             file.mimetype == "image/png" ||
-             file.mimetype == "image/jpeg"){
-             cb(null, true)
-         }else{
-             cb(null, false);
-             cb(new Error("Format invalid"));
-         }
-       },
-       storage:storage,
-       limits:{fileSize:maxsize}
-}).single('image');
 module.exports.uploadProfilClient = async(req, res)=>{
   
     try {
@@ -98,7 +71,35 @@ module.exports.uploadProfilClient = async(req, res)=>{
       console.log(error)
   }
 }
+const storage = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
+        // cb(null, `./imageProfilCadidat`);  
+        cb(null, `./uploads/imageProfilCadidat/`);  
+    },
+    filename:(req,file, cb)=>{
+        const id = req.params.id; 
+        console.log(file)
+        const fileName = id+".jpg";
+        cb(null, fileName);
+    }
+})
 
+const upload = multer(
+ {
+   fileFilter:(req, file,cb)=>{
+     if(file.mimetype == "image/jpg" ||
+         file.mimetype == "image/png" ||
+         file.mimetype == "image/jpeg"){
+         cb(null, true)
+     }else{
+         cb(null, false);
+         cb(new Error("Format invalid"));
+     }
+   },
+   storage:storage,
+   limits:{fileSize:maxsize}
+}).single('image');
 module.exports.uploadProfilCandidat = async(req, res)=>{
     try {
   
@@ -110,8 +111,8 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
         }
         else{
             const id = req.params.id;
-            console.log(id);
-            const fileName = "nkanzaomar.jpg";
+         
+            const fileName = id+".jpg";
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
@@ -366,8 +367,8 @@ module.exports.disponible= async(req, res)=>{
 const storageCV = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
-        cb(null, `${__dirname}/../uploads/imageCV/`);    
-        // cb(null, `./uploads/imageCV/`);    
+        // cb(null, `${__dirname}/../uploads/imageCV/`);    
+        cb(null, `./uploads/imageCV/`);    
     },
     filename:(req,file, cb)=>{
         
@@ -433,7 +434,8 @@ module.exports.uploadCV_ = async(req, res)=>{
 const storage4 = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `ageCertif/`);  
-        cb(null, `${__dirname}/../uploads/imageCertif/`);  
+        cb(null, `./uploads/imageCertif/`);  
+        // cb(null, `${__dirname}/../uploads/imageCertif/`);  
         // cb(null, `$https://tillmenbackend.onrender.com/uploads/imageCertif/`);  
     },
     filename:(req,file, cb)=>{
@@ -634,8 +636,8 @@ module.exports.modification2= async(req, res)=>{
 
 const storage5 = multer.diskStorage({
     destination:(req, file, cb)=>{
-        cb(null, `${__dirname}/../uploads/imageHisto`);  
-        // cb(null, `./uploads/imageHisto`);  
+        // cb(null, `${__dirname}/../uploads/imageHisto`);  
+        cb(null, `./uploads/imageHisto/`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
         // cb(null, `ageHisto`);  
     },

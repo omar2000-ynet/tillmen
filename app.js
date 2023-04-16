@@ -12,7 +12,7 @@ const app = express();
 app.use(cookieParser());         
 const corsOptions = {                                        
     origin: ['https://till-2f088.web.app','http://localhost:3000'],   
-    // credentials: true,   
+    credentials: true,   
     // 'allowedHeaders': ['sessionId', 'Content-Type'],
     // 'exposedHeaders': ['sessionId'],
     // 'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
