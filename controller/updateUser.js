@@ -75,7 +75,7 @@ const storage = multer.diskStorage({
     destination:(req, file, cb)=>{
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
         // cb(null, `./imageProfilCadidat`);  
-        cb(null, `./uploads/imageProfilCadidat/`);  
+        cb(null, `./uploads/imageProfilCadidat/`);
     },
     filename:(req,file, cb)=>{
         const id = req.params.id; 
