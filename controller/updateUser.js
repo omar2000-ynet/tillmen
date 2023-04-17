@@ -7,14 +7,16 @@ const fs = require('fs');
 //Ajout des images de profiles pour le client et le candidat
 
 const storage2 = multer.diskStorage({
-    destination:(req, file, cb)=>{
+    // destination:(req, file, cb)=>{
         // cb(null, `${__dirname}/../uploads/imageProfil/`);  
-        cb(null, `./uploads/imageProfil/`);  
+        // cb(null, `./uploads/imageProfil/`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
-    },
+    // },
+    destination:path.join(__dirname,'..','uploads','imageProfil'),
     filename:(req,file, cb)=>{
         const id = req.params.id;
-        const fileName = id+".jpg";
+        // const fileName = id+".jpg";
+        const fileName = `${id}${path.extname(file.originalname)}`
         cb(null, fileName);
        
     }
@@ -48,7 +50,8 @@ module.exports.uploadProfilClient = async(req, res)=>{
             res.send(err)
         }else{
             const id = req.params.id;
-            const fileName = id +".jpg";
+            // const fileName = id +".jpg";
+            const fileName = `${id}${path.extname(req.file.originalname)}`
             try {
                 await schemaClient.findByIdAndUpdate(
                     id,
@@ -72,21 +75,22 @@ module.exports.uploadProfilClient = async(req, res)=>{
   }
 }
 const storage = multer.diskStorage({
-    destination:(req, file, cb)=>{
+    // destination:(req, file, cb)=>{
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
-         
-        cb(null, `./uploads/imageProfilCadidat/`);
-    },
+        // cb(null, `./uploads/imageProfilCadidat/`);
+    // },
+    destination:path.join(__dirname,'..','uploads','imageProfilCadidat'),
     filename:(req,file, cb)=>{
         const id = req.params.id; 
-        console.log(file)
-        const fileName = id+".jpg";
+        // const fileName = id+".jpg";
+        const fileName = `${id}${path.extname(file.originalname)}`
+        console.log(fileName)
         cb(null, fileName);
     }
-})
-
+});
 const upload = multer(
  {
+   storage:storage,
    fileFilter:(req, file,cb)=>{
      if(file.mimetype == "image/jpg" ||
          file.mimetype == "image/png" ||
@@ -97,12 +101,11 @@ const upload = multer(
          cb(new Error("Format invalid"));
      }
    },
-   storage:storage,
+  
    limits:{fileSize:maxsize}
 }).single('image');
 module.exports.uploadProfilCandidat = async(req, res)=>{
     try {
-  
       upload(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
             res.status(352).send(err);
@@ -111,8 +114,9 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
         }
         else{
             const id = req.params.id;
-         
-            const fileName = id+".jpg";
+             const fileName = `${id}${path.extname(req.file.originalname)}`
+            //  console.log(fileName)
+            // const fileName = id+".jpg";
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
@@ -137,7 +141,6 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
 //Achevement de l'inscription du candidat
 module.exports.acheInscrMetier= async(req, res)=>{
     try {
-  
     const {metier,experience} = req.body;
     const id = req.params.id;
 
@@ -365,15 +368,17 @@ module.exports.disponible= async(req, res)=>{
 
 //Chargement du CV et Certivicat
 const storageCV = multer.diskStorage({
-    destination:(req, file, cb)=>{
+    // destination:(req, file, cb)=>{
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
         // cb(null, `${__dirname}/../uploads/imageCV/`);    
-        cb(null, `./uploads/imageCV/`);    
-    },
+        // cb(null, `./uploads/imageCV/`);    
+    // },
+    destination:path.join(__dirname,'..','uploads','imageCV'),
     filename:(req,file, cb)=>{
         
         const id = req.params.id;
-        const fileName = id+".pdf";
+        const fileName = `${id}${path.extname(file.originalname)}`
+        // const fileName = id+".pdf";
         cb(null, fileName);
        
     }
@@ -405,8 +410,9 @@ module.exports.uploadCV_ = async(req, res)=>{
           res.send(err)
       }else{
           const id = req.params.id;
-          const fileName = id +".pdf";
-           console.log(id)
+            const fileName = `${id}${path.extname(req.file.originalname)}`
+            // const fileName = id +".pdf";
+        //    console.log(id)
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
@@ -432,12 +438,14 @@ module.exports.uploadCV_ = async(req, res)=>{
 
 // D'autres document/Certification 
 const storage4 = multer.diskStorage({
-    destination:(req, file, cb)=>{
+    // destination:(req, file, cb)=>{
         // cb(null, `ageCertif/`);  
-        cb(null, `./uploads/imageCertif/`);  
+        // cb(null, `./uploads/imageCertif/`);  
         // cb(null, `${__dirname}/../uploads/imageCertif/`);  
         // cb(null, `$https://tillmenbackend.onrender.com/uploads/imageCertif/`);  
-    },
+    // },
+    destination:path.join(__dirname,'..','uploads','imageCertif'),
+
     filename:(req,file, cb)=>{
         const id = req.params.id;
         var dt =new Date();
@@ -446,7 +454,8 @@ const storage4 = multer.diskStorage({
         const  m = dt.getMonth();
         const mi = dt.getMinutes();
         const dts = y+d+m+mi;
-        const fileName = id+dts+".pdf";
+        const fileName = `${id+dts}${path.extname(file.originalname)}`
+        // const fileName = id+dts+".pdf";
         cb(null, fileName);
     }
 });
@@ -481,7 +490,9 @@ module.exports.uploadCertif_ = async(req, res)=>{
           const mi = dt.getMinutes();
           const dts = y+d+m+mi;
           const titreDoc = req.body.titreDoc;
-          const fileName = id+dts +".pdf";
+          const fileName = `${id+dts}${path.extname(req.file.originalname)}`
+        // const fileName = id+dts +".pdf";
+          
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
@@ -635,12 +646,13 @@ module.exports.modification2= async(req, res)=>{
 
 
 const storage5 = multer.diskStorage({
-    destination:(req, file, cb)=>{
+    // destination:(req, file, cb)=>{
         // cb(null, `${__dirname}/../uploads/imageHisto`);  
-        cb(null, `./uploads/imageHisto/`);  
+        // cb(null, `./uploads/imageHisto/`);  
         // cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
         // cb(null, `ageHisto`);  
-    },
+    // },
+    destination:path.join(__dirname,'..','uploads','imageHisto'),
     filename:(req,file, cb)=>{
         const id = req.params.id;
         var dt =new Date();
@@ -649,7 +661,8 @@ const storage5 = multer.diskStorage({
         const  m = dt.getMonth();
         const mi = dt.getMinutes();
         const dts = y+d+m+mi;
-        const fileName = id+dts +".jpg";
+        const fileName = `${id+dts}${path.extname(file.originalname)}`;
+        // const fileName = id+dts +".jpg";
         cb(null, fileName);
     }
 }) 
@@ -688,7 +701,8 @@ module.exports.uploadHistorique = async(req, res)=>{
           const mi = dt.getMinutes();
           const dts = y+d+m+mi;
           const description = req.body.description;
-          const fileName = id+dts +".jpg";
+        //   const fileName = id+dts +".jpg";
+          const fileName = `${id+dts}${path.extname(req.file.originalname)}`
           try {            
               schemaCandidat.findByIdAndUpdate(  
                   id, 
