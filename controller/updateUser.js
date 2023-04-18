@@ -1,31 +1,22 @@
 const multer = require('multer');    
 const path = require('path');
+const {getStorage, ref, getDownloadURL, uploadBytesResumable} = require("firebase/storage");
+const {initializeApp} = require('firebase/app')
+const config = require('../config/firebase.config');
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat');
-const schemaSuggest = require('../model/suggest');
-const fs = require('fs');
 //Ajout des images de profiles pour le client et le candidat
 
-const storage2 = multer.diskStorage({
-    // destination:(req, file, cb)=>{
-        // cb(null, `${__dirname}/../uploads/imageProfil/`);  
-        // cb(null, `./uploads/imageProfil/`);  
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfil/`);  
-    // },
-    destination:path.join(__dirname,'..','uploads','imageProfil'),
-    filename:(req,file, cb)=>{
-        const id = req.params.id;
-        // const fileName = id+".jpg";
-        const fileName = `${id}${path.extname(file.originalname)}`
-        cb(null, fileName);
-       
-    }
-})
+//Initialisation de l'application firebase
+initializeApp(config);
+// initialize Cloud Storage and get a reference to the service
+const storage = getStorage();
+
 const maxsize = 1024 * 1024 * 5;
 const maxsize1 = 1024 * 1024 * 10;
-var uploadc = multer( 
+var upload = multer( 
      {
-       storage:storage2,
+       storage:multer.memoryStorage(),
        fileFilter:(req, file,cb)=>{
          if(file.mimetype == "image/jpg" ||
              file.mimetype == "image/png" ||
@@ -40,29 +31,38 @@ var uploadc = multer(
          }).single('image');
 
 module.exports.uploadProfilClient = async(req, res)=>{
-  
     try {
-    
-      uploadc(req, res, async(err)=>{
+      upload(req, res, async(err)=>{
         if(err instanceof multer.MulterError){
             res.send(err);
         }else if(err){
             res.send(err)
         }else{
             const id = req.params.id;
-            // const fileName = id +".jpg";
-            const fileName = `${id}${path.extname(req.file.originalname)}`
+            const fileName = `${id}${path.extname(req.file.originalname)}`;
+            const storageRef = ref(storage, `imageProfil/${id}`);
+            //Create file metadata including the content type
+            const metadata = {
+                contentType : req.file.mimetype,
+            }
+            //Upload the file in the bucket storage
+            const snapshot = await uploadBytesResumable(storageRef,req.file.buffer,metadata);
+            //Grab the public url
+            const downloadURL = await getDownloadURL(snapshot.ref);
             try {
                 await schemaClient.findByIdAndUpdate(
                     id,
                     {
-                        $set:{picture:"uploads/imageProfil/"+fileName}
+                        $set:{picture:"imageProfil/"+fileName}
                     },
                     {
                         new:true, upset:true 
                     }
                 )
-                .then((data)=>res.send(data))
+                .then((data)=>{
+                    console.log(downloadURL);
+                    res.send(data)
+                })
                 .catch((err)=>res.status(500).send(err))
             } catch (err) {
                 res.status(500).send({message: err})
@@ -71,39 +71,10 @@ module.exports.uploadProfilClient = async(req, res)=>{
         }
       })
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error})
   }
 }
-const storage = multer.diskStorage({
-    // destination:(req, file, cb)=>{
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageProfilCadidat/`);  
-        // cb(null, `./uploads/imageProfilCadidat/`);
-    // },
-    destination:path.join(__dirname,'..','uploads','imageProfilCadidat'),
-    filename:(req,file, cb)=>{
-        const id = req.params.id; 
-        // const fileName = id+".jpg";
-        const fileName = `${id}${path.extname(file.originalname)}`
-        console.log(fileName)
-        cb(null, fileName);
-    }
-});
-const upload = multer(
- {
-   storage:storage,
-   fileFilter:(req, file,cb)=>{
-     if(file.mimetype == "image/jpg" ||
-         file.mimetype == "image/png" ||
-         file.mimetype == "image/jpeg"){
-         cb(null, true)
-     }else{
-         cb(null, false);
-         cb(new Error("Format invalid"));
-     }
-   },
-  
-   limits:{fileSize:maxsize}
-}).single('image');
+
 module.exports.uploadProfilCandidat = async(req, res)=>{
     try {
       upload(req, res, async(err)=>{
@@ -114,28 +85,37 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
         }
         else{
             const id = req.params.id;
-             const fileName = `${id}${path.extname(req.file.originalname)}`
-            //  console.log(fileName)
-            // const fileName = id+".jpg";
+            const fileName = `${id}${path.extname(req.file.originalname)}`;
+            const storageRef = ref(storage, `imageProfilCadidat/${id}`);
+            //Create file metadata including the content type
+            const metadata = {
+                contentType : req.file.mimetype,
+            }
+            //Upload the file in the bucket storage
+            const snapshot = await uploadBytesResumable(storageRef,req.file.buffer,metadata);
+            //Grab the public url
+            const downloadURL = await getDownloadURL(snapshot.ref);
             try {            
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
                     {  
-                        $set:{picture:"uploads/imageProfilCadidat/"+fileName}
+                        $set:{picture:"imageProfilCadidat/"+fileName}
                     },
                     { 
                         new:true, upset:true 
                     }
                 )
-                .then((data)=>res.send(data))
-                .catch((err)=>res.send(err))
+                .then((data)=>{
+                    console.log(downloadURL);
+                    res.send(data);})
+                .catch((err)=>res.status(500).send(err))
             } catch (err) {
-                res.status(200).send({message: err})
-            }  
+                res.status(500).send({message: err})
+            }
         }
       })
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error});
   }
 }
 //Achevement de l'inscription du candidat
@@ -175,7 +155,7 @@ module.exports.acheInscrMetier= async(req, res)=>{
     })
     .catch(err=>res.send(err))
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error});
   }
 }
 
@@ -197,7 +177,7 @@ module.exports.acheInscr1= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+      return res.status(402).send({error});
   }
 }
 module.exports.acheInscrService= (req, res)=>{
@@ -216,7 +196,7 @@ module.exports.acheInscrService= (req, res)=>{
     ).then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+      return res.status(402).send({error});
   }
 
 }
@@ -256,7 +236,7 @@ module.exports.acheInscrLangue= (req, res)=>{
     .catch(err=>res.send(err))
    
   } catch (error) {
-      console.log(error)
+      return res.status(402).send({error});
   }
 }
 module.exports.acheInscrEtude= (req, res)=>{
@@ -282,7 +262,7 @@ module.exports.acheInscrEtude= (req, res)=>{
     .catch((err) => res.status(500).send({ message: err }))
 
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error});
   }
 }
 module.exports.acheInscreCompetence= (req, res)=>{
@@ -301,7 +281,7 @@ module.exports.acheInscreCompetence= (req, res)=>{
     ).then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error});
   }
 }
 //Acceptation de la licence par le candidat
@@ -321,13 +301,12 @@ module.exports.licence= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error});
   }
 }
 //Acceptation de la licence par le client
 module.exports.licenceC= async(req, res)=>{
     try {
-  
     const id = req.params.id;
     await schemaClient.findByIdAndUpdate(
         id,
@@ -341,7 +320,7 @@ module.exports.licenceC= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error});
   }
 }
 
@@ -362,30 +341,14 @@ module.exports.disponible= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error});
   }
 }
 
-//Chargement du CV et Certivicat
-const storageCV = multer.diskStorage({
-    // destination:(req, file, cb)=>{
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageCV/`);    
-        // cb(null, `${__dirname}/../uploads/imageCV/`);    
-        // cb(null, `./uploads/imageCV/`);    
-    // },
-    destination:path.join(__dirname,'..','uploads','imageCV'),
-    filename:(req,file, cb)=>{
-        
-        const id = req.params.id;
-        const fileName = `${id}${path.extname(file.originalname)}`
-        // const fileName = id+".pdf";
-        cb(null, fileName);
-       
-    }
-})
+
 var uploadCV = multer(
     {
-      storage:storageCV,
+      storage:multer.memoryStorage(),
       fileFilter:(req, file,cb)=>{
         console.log(file)
         if(
@@ -409,21 +372,31 @@ module.exports.uploadCV_ = async(req, res)=>{
       }else if(err){
           res.send(err)
       }else{
-          const id = req.params.id;
-            const fileName = `${id}${path.extname(req.file.originalname)}`
-            // const fileName = id +".pdf";
-        //    console.log(id)
+            const id = req.params.id;
+            const fileName = `${id}${path.extname(req.file.originalname)}`;
+            const storageRef = ref(storage, `imageCV/${id}`);
+            //Create file metadata including the content type
+            const metadata = {
+                contentType : req.file.mimetype,
+            }
+            //Upload the file in the bucket storage
+            const snapshot = await uploadBytesResumable(storageRef,req.file.buffer,metadata);
+            //Grab the public url
+            const downloadURL = await getDownloadURL(snapshot.ref);
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
                   {
-                      $set:{cv:"uploads/imageCV/"+fileName}
+                      $set:{cv:"imageCV/"+fileName}
                   },
                   {
                       new:true, upset:true
                   }
               )
-              .then((data)=>res.send(data))
+              .then((data)=>{
+                console.log(downloadURL);
+                res.send(data);
+               })
               .catch((err)=>res.status(500).send(err))
           } catch (err) {
               res.status(500).send({message: err})
@@ -432,36 +405,14 @@ module.exports.uploadCV_ = async(req, res)=>{
       }
     })
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error})
   }
 }
 
-// D'autres document/Certification 
-const storage4 = multer.diskStorage({
-    // destination:(req, file, cb)=>{
-        // cb(null, `ageCertif/`);  
-        // cb(null, `./uploads/imageCertif/`);  
-        // cb(null, `${__dirname}/../uploads/imageCertif/`);  
-        // cb(null, `$https://tillmenbackend.onrender.com/uploads/imageCertif/`);  
-    // },
-    destination:path.join(__dirname,'..','uploads','imageCertif'),
 
-    filename:(req,file, cb)=>{
-        const id = req.params.id;
-        var dt =new Date();
-        const y = dt.getFullYear();
-        const d = dt.getDate();
-        const  m = dt.getMonth();
-        const mi = dt.getMinutes();
-        const dts = y+d+m+mi;
-        const fileName = `${id+dts}${path.extname(file.originalname)}`
-        // const fileName = id+dts+".pdf";
-        cb(null, fileName);
-    }
-});
 var uploadCertif = multer(
     {
-      storage:storage4,
+        storage:multer.memoryStorage(),
       fileFilter:(req, file,cb)=>{
         if(file.mimetype == "application/pdf"){
             cb(null, true)
@@ -488,11 +439,20 @@ module.exports.uploadCertif_ = async(req, res)=>{
           const d = dt.getDate();
           const  m = dt.getMonth();
           const mi = dt.getMinutes();
-          const dts = y+d+m+mi;
+          const s = dt.getSeconds();
+          const dts = y+d+m+mi+s;
           const titreDoc = req.body.titreDoc;
           const fileName = `${id+dts}${path.extname(req.file.originalname)}`
-        // const fileName = id+dts +".pdf";
-          
+        
+            const storageRef = ref(storage, `imageCertif/${id+dts}`);
+            //Create file metadata including the content type
+            const metadata = {
+                contentType : req.file.mimetype,
+            }
+            //Upload the file in the bucket storage
+            const snapshot = await uploadBytesResumable(storageRef,req.file.buffer,metadata);
+            //Grab the public url
+            const downloadURL = await getDownloadURL(snapshot.ref);
           try {
               await schemaCandidat.findByIdAndUpdate(
                   id,
@@ -500,7 +460,7 @@ module.exports.uploadCertif_ = async(req, res)=>{
                       $addToSet:{
                         docCertification:{
                             titreDoc : titreDoc,
-                            pathdoc: "uploads/imageCertif/"+fileName
+                            pathdoc: "imageCertif/"+fileName
                         }
                      }
                   },
@@ -508,7 +468,9 @@ module.exports.uploadCertif_ = async(req, res)=>{
                       new:true, upset:true,  setDefaultsOnInsert: true 
                   }
               )
-              .then((data)=>res.send(data))
+              .then((data)=>{
+                console.log(downloadURL);
+                res.send(data);})
               .catch((err)=>res.status(500).send(err))
           } catch (err) {
               res.status(500).send({message: err})
@@ -517,29 +479,33 @@ module.exports.uploadCertif_ = async(req, res)=>{
       }
     })
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error})
   }
 }
 
 //Mise à jour du document du candidat
 
 module.exports.rep_quest_secur = async(req, res)=>{
-    const id = req.params.id;
-    const {question, reponse} = req.body;
-    await schemaClient.findByIdAndUpdate(
-        id,
-        {
-            $addToSet:{
-                rep_question_Secur:{
-                    question:question,
-                    reponse:reponse
+    try {
+        const id = req.params.id;
+        const {question, reponse} = req.body;
+        await schemaClient.findByIdAndUpdate(
+            id,
+            {
+                $addToSet:{
+                    rep_question_Secur:{
+                        question:question,
+                        reponse:reponse
+                    }
                 }
-            }
-        },
-        {new: true, upsert: true}
-    )
-    .then(data=>res.status(200).send(data))
-    .catch(err=>res.send(err))
+            },
+            {new: true, upsert: true}
+        )
+        .then(data=>res.status(200).send(data))
+        .catch(err=>res.send(err))  
+    } catch (error) {
+        return res.status(402).send({error})
+    }
 }
 
 module.exports.projet = async(req, res)=>{
@@ -569,7 +535,7 @@ module.exports.projet = async(req, res)=>{
      .then(data=>res.status(200).send(data))
      .catch(err=>res.send(err))
   } catch (error) {
-      console.log(error)
+       return res.status(402).send({error})
   }
 }
 
@@ -606,7 +572,7 @@ module.exports.modification= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+    return res.status(402).send({error})
   }
 }
 //Update des modification du candidat
@@ -640,53 +606,16 @@ module.exports.modification2= async(req, res)=>{
     .then((data) => res.send(data))
     .catch((err) => res.status(500).send({ message: err }))
   } catch (error) {
-      console.log(error)
+     return res.status(402).send({error})
   }
 }
 
 
-const storage5 = multer.diskStorage({
-    // destination:(req, file, cb)=>{
-        // cb(null, `${__dirname}/../uploads/imageHisto`);  
-        // cb(null, `./uploads/imageHisto/`);  
-        // cb(null, `https://tillmenbackend.onrender.com/uploads/imageHisto`);  
-        // cb(null, `ageHisto`);  
-    // },
-    destination:path.join(__dirname,'..','uploads','imageHisto'),
-    filename:(req,file, cb)=>{
-        const id = req.params.id;
-        var dt =new Date();
-        const y = dt.getFullYear();
-        const d = dt.getDate();
-        const  m = dt.getMonth();
-        const mi = dt.getMinutes();
-        const dts = y+d+m+mi;
-        const fileName = `${id+dts}${path.extname(file.originalname)}`;
-        // const fileName = id+dts +".jpg";
-        cb(null, fileName);
-    }
-}) 
-const upload5 = multer(
- {
-   fileFilter:(req, file,cb)=>{
-     if(file.mimetype == "image/jpg" ||
-         file.mimetype == "image/png" ||
-         file.mimetype == "image/jpeg"){
-         cb(null, true)
-     }else{
-         cb(null, false);
-         cb(new Error("Format invalid"));
-     }
-   },
-   storage:storage5,
-   limits:{fileSize:maxsize}
-}).single('image');
 
 //Historique
 module.exports.uploadHistorique = async(req, res)=>{
     try {
-  
-    upload5(req, res, async(err)=>{
+    upload(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.status(352).send(err);
       }else if(err){ 
@@ -699,17 +628,28 @@ module.exports.uploadHistorique = async(req, res)=>{
           const d = dt.getDate();
           const  m = dt.getMonth();
           const mi = dt.getMinutes();
-          const dts = y+d+m+mi;
+          const s = dt.getSeconds();
+          const dts = y+d+m+mi+s;
           const description = req.body.description;
         //   const fileName = id+dts +".jpg";
-          const fileName = `${id+dts}${path.extname(req.file.originalname)}`
+          const fileName = `${id+dts}${path.extname(req.file.originalname)}`;
+
+          const storageRef = ref(storage, `imageHisto/${id+dts}`);
+          //Create file metadata including the content type
+          const metadata = {
+              contentType : req.file.mimetype,
+          }
+          //Upload the file in the bucket storage
+          const snapshot = await uploadBytesResumable(storageRef,req.file.buffer,metadata);
+          //Grab the public url
+          const downloadURL = await getDownloadURL(snapshot.ref);
           try {            
               schemaCandidat.findByIdAndUpdate(  
                   id, 
                   {  
                       $addToSet:{
                         historiqueTravaux:{
-                            picture:"uploads/imageHisto/"+fileName,
+                            picture:"imageHisto/"+fileName,
                             date : dt,
                             description: description
                          }
@@ -719,7 +659,9 @@ module.exports.uploadHistorique = async(req, res)=>{
                       new:true, upset:true 
                   }
               )
-              .then((data)=>res.send(data))
+              .then((data)=>{
+                 console.log(downloadURL);
+                res.send(data);})
               .catch((err)=>res.send(err))
           } catch (err) {
               res.status(200).send({message: err})
@@ -727,7 +669,7 @@ module.exports.uploadHistorique = async(req, res)=>{
       }
     })
   } catch (error) {
-      console.log(error)
+      return res.status(402).send({error})
   }
 }
 

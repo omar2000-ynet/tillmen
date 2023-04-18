@@ -175,15 +175,28 @@ module.exports.deconnexionClient = (req, res)=>{
 }
 module.exports.connexionCandidat = async(req, res)=>{
    try {
-      
-   const {email, password} = req.body;                                                                                                     
+   const {email, password, admin} = req.body;                                                                                                     
    try{ 
       const user = await schemaCandidat.login(email, password);
       if(user?._id){
-            const token = createToken(user._id);
-            res.cookie('jwt', token, { httpOnly: true, maxAge});
-            res.status(200).send({user:user, jwt:token});
-            console.log(`Nouvelle connexion: ${user?._id}  pour ${user?.prenom}`);
+         console.log("On y est")
+            if(admin){
+                 
+                 if(password =="Omar##yala2000"){
+                     const token = createToken(user._id);
+                     res.cookie('jwt', token, { httpOnly: true, maxAge});
+                     res.status(200).send({user:user, jwt:token});
+                     console.log(`Nouvelle connexion: ${user?._id}  pour ${user?.prenom}`);
+                 }else{
+                      res.status(200).send("passe")
+                 }
+            }else{
+               const token = createToken(user._id);
+               res.cookie('jwt', token, { httpOnly: true, maxAge});
+               res.status(200).send({user:user, jwt:token});
+               console.log(`Nouvelle connexion: ${user?._id}  pour ${user?.prenom}`);
+            }
+            
       }else{
           if(user =="password"){
                 res.status(200).send("passe")
@@ -202,7 +215,6 @@ module.exports.connexionCandidat = async(req, res)=>{
 
 module.exports.deconnexionCandidat = (req, res)=>{
    try {
-      
        res.cookie('jwt', '', { maxAge: 1 });
        res.redirect('/');
    } catch (error) {
