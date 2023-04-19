@@ -53,7 +53,7 @@ module.exports.uploadProfilClient = async(req, res)=>{
                 await schemaClient.findByIdAndUpdate(
                     id,
                     {
-                        $set:{picture:"imageProfil/"+fileName}
+                        $set:{picture:downloadURL}
                     },
                     {
                         new:true, upset:true 
@@ -99,7 +99,7 @@ module.exports.uploadProfilCandidat = async(req, res)=>{
                 schemaCandidat.findByIdAndUpdate(  
                     id, 
                     {  
-                        $set:{picture:"imageProfilCadidat/"+fileName}
+                        $set:{picture:downloadURL}
                     },
                     { 
                         new:true, upset:true 
@@ -387,7 +387,7 @@ module.exports.uploadCV_ = async(req, res)=>{
               await schemaCandidat.findByIdAndUpdate(
                   id,
                   {
-                      $set:{cv:"imageCV/"+fileName}
+                      $set:{cv:downloadURL}
                   },
                   {
                       new:true, upset:true
@@ -460,7 +460,8 @@ module.exports.uploadCertif_ = async(req, res)=>{
                       $addToSet:{
                         docCertification:{
                             titreDoc : titreDoc,
-                            pathdoc: "imageCertif/"+fileName
+                            pathdoc:downloadURL
+                            // pathdoc: "imageCertif/"+fileName
                         }
                      }
                   },
@@ -649,7 +650,7 @@ module.exports.uploadHistorique = async(req, res)=>{
                   {  
                       $addToSet:{
                         historiqueTravaux:{
-                            picture:"imageHisto/"+fileName,
+                            picture:downloadURL,
                             date : dt,
                             description: description
                          }
