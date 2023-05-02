@@ -57,6 +57,20 @@ module.exports.tousLesDoc= async(req, res)=>{
         res.send(error);
     }
 }
+const tousLesCandidat = async()=>{
+    try {
+        const data=await schemaCandidat.find();
+        const All = [];
+        for (let j = 0; j < data.length; j++) {
+                if(data[j]?.description){
+                    All.push(data[j])
+                }
+        }
+        return All;
+    } catch (error) {
+        return false;
+    }
+}
 //Recupération de tous les documents de la collection des clients
 module.exports.tousLesDocClient=(req, res)=>{
     try {
@@ -147,6 +161,70 @@ module.exports.nomouprenom=async(req, res)=>{
         }
         res.send(All);
   
+    } catch (error) {
+        res.send(error);
+    }
+}
+module.exports.listMetierEtCommune=async(req, res)=>{
+  try {
+    const TBmetier = async()=>{
+        const t = await tousLesCandidat();
+        if(t){
+            const met = [];
+            const com = [];//Récupère toutes les commune
+            for (let i = 0; i < t.length; i++) {
+                // Début script  data commune
+                if(com.length ==0){
+                    if(t[i].adresse.commune_secteur){
+                        com.push(t[i].adresse.commune_secteur)
+                    }
+                }else{
+                    let k2=1;
+                    for (let s = 0; s < com.length; s++) {
+                        if(com[s] != t[i]?.adresse.commune_secteur){
+                                k2 = k2 * 1
+                        }else{
+                            k2 = k2 * 0
+                        }
+                    }
+                    if(k2==1){
+                        if(t[i]?.adresse.commune_secteur){
+                                com.push(t[i]?.adresse.commune_secteur)
+                        }
+                    }
+                }
+                //Fin script data commune
+                for (let k = 0; k < t[i]?.metiers?.length; k++) {
+                    if(met?.length==0){
+                    if(t[i]?.metiers[k].metier){
+                        met.push(t[i]?.metiers[k].metier)
+                    }
+                    }else{
+                        let k1=1;
+                        for (let s = 0; s < met.length; s++) {
+                            if(met[s] != t[i]?.metiers[k].metier){
+                                k1 = k1 * 1
+                            }else{
+                                k1 = k1 * 0
+                            }
+                        }
+                        if(k1==1){ 
+                        if(t[i]?.metiers[k].metier){
+                            met.push(t[i]?.metiers[k].metier)
+                        }
+                        }
+                    }              
+                }         
+            }
+            const res = {
+                metier : met,
+                commune : com
+            }
+           return res;
+        }
+      }     
+      const result = await TBmetier();
+      res.send(result);
     } catch (error) {
         res.send(error);
     }

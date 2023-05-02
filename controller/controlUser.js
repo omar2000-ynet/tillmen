@@ -9,6 +9,13 @@ module.exports.inscrireClient = async(req, res)=>{
    try {
   
          const {nom, prenom, genre, lieu_nais, date_nais, email,telephone,adresse, password} = req.body;
+          var dt =new Date();
+          const y = dt.getFullYear();
+          const d = dt.getDate();
+          const  m = dt.getMonth();
+          const mi = dt.getMinutes();
+          const s = dt.getSeconds();
+          const code = y+""+d+""+m+""+mi+""+s;
          const client = await new schemaClient({
             nom:nom, 
             prenom:prenom, 
@@ -18,6 +25,7 @@ module.exports.inscrireClient = async(req, res)=>{
             email:email, 
             telephone: telephone,
             adresse: adresse,
+            code: code,
             password:password
          })
          try {
@@ -36,18 +44,40 @@ module.exports.inscrireClient = async(req, res)=>{
 module.exports.inscrireClientEntreprise = async(req, res)=>{
 
    try {
-      
- const {nom, prenom, genre, nom_entreprise, date_creation, email,telephone,adresse, password} = req.body;
+       console.log(req.body)
+ const {nom, prenom, genre, nom_entreprise, date_creation, email,telephone,
+   adresse,forme_juridique,numero_identification,
+   telephoneE,emailE,url_du_site,
+   secteur_activite,nombre_salarie,
+   chiffre_affaire_annuel, password} = req.body;
+ var dt =new Date();
+   const y = dt.getFullYear();
+   const d = dt.getDate();
+   const  m = dt.getMonth();
+   const mi = dt.getMinutes();
+   const s = dt.getSeconds();
+   const code = y+""+d+""+m+""+mi+""+s;
  const client = await new schemaClient({
-    nom:nom, 
-    prenom:prenom, 
-    genre:genre, 
-    nom_entreprise:nom_entreprise, 
-    date_creation:date_creation, 
-    email:email, 
-    telephone: telephone,
-    adresse: adresse,
-    password:password
+      nom:nom, 
+      prenom:prenom, 
+      genre:genre, 
+      email:email, 
+      telephone: telephone,
+      adresse: adresse,
+      password:password,
+      nom_entreprise:nom_entreprise, 
+      date_creation:date_creation, 
+      forme_juridique:forme_juridique,
+      numero_identification:numero_identification,
+      coordonnee:{
+         telephone:telephoneE,
+         email:emailE,
+         url_du_site:url_du_site
+      }, 
+      secteur_activite:secteur_activite,
+      nombre_salarie:nombre_salarie,
+      chiffre_affaire_annuel:chiffre_affaire_annuel,
+      code:code,
  })
  try {
     const clients = await client.save();
@@ -65,6 +95,13 @@ module.exports.inscrireCandidat = async(req, res)=>{
    try {
       
  const {nom, prenom, genre, lieu_naiss, date_naiss, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_vilage,num_parc, password} = req.body;
+ var dt =new Date();
+   const y = dt.getFullYear();
+   const d = dt.getDate();
+   const  m = dt.getMonth();
+   const mi = dt.getMinutes();
+   const s = dt.getSeconds(); 
+   const code = y+""+d+""+m+""+mi+""+s;
  const candidat = await new schemaCandidat({
     nom:nom, 
     prenom:prenom, 
@@ -82,11 +119,12 @@ module.exports.inscrireCandidat = async(req, res)=>{
          avenue_vilage:avenue_vilage,
          num_parc:num_parc
       },
+    code:code,
     password:password
  })
  try {
-    const candidats = await candidat.save();
-    return res.status(201).send(candidats);
+      const candidats = await candidat.save();
+      return res.status(201).send(candidats);
  } catch (err) {
    const errors = ControlErrs.ControlErr(err);
    return res.status(400).send(errors); 
@@ -96,28 +134,54 @@ module.exports.inscrireCandidat = async(req, res)=>{
    }
 }
 module.exports.inscrireCandidatEntreprise = async(req, res)=>{
-   try {
-      
- const {nom, prenom, genre, nom_entreprise, date_creation, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_village,num_parc, password} = req.body;
- const candidat = await new schemaCandidat({
-    nom_entreprise:nom_entreprise, 
-    date_creation:date_creation, 
-    nom :nom,
-    prenom: prenom,
-    telephone:telephone,
-    email: email,
-    genre:genre,
-    adresse:{ 
-         pays:pays,
-         province:province, 
-         ville_territoire:ville_territoire,
-         commune_secteur:commune_secteur,
-         quartier_groupement:quartier_groupement,
-         avenue_vilage:avenue_village,
-         num_parc:num_parc
-   },
-    password:password
- })
+   try {   
+      console.log(req.body); 
+      const { nom, prenom, genre, nom_entreprise, date_creation, email,telephone,
+         pays,province,ville_territoire,commune_secteur,
+         quartier_groupement,avenue_village,num_parc, 
+         forme_juridique,numero_identification,
+         telephoneE,emailE,url_du_site,
+         secteur_activite,nombre_salarie,
+         chiffre_affaire_annuel,password} = req.body;
+      var dt =new Date();
+         const y = dt.getFullYear();
+         const d = dt.getDate();
+         const  m = dt.getMonth();
+         const mi = dt.getMinutes();
+         const s = dt.getSeconds();
+         const code = y+""+d+""+m+""+mi+""+s;
+      const candidat = await new schemaCandidat({
+            
+            nom :nom,
+            prenom: prenom,
+            genre:genre,
+            email: email,
+            telephone:telephone,
+            adresse:{ 
+               pays:pays,
+               province:province, 
+               ville_territoire:ville_territoire,
+               commune_secteur:commune_secteur,
+               quartier_groupement:quartier_groupement,
+               avenue_vilage:avenue_village,
+               num_parc:num_parc
+            },
+            password:password,
+            nom_entreprise:nom_entreprise, 
+            date_creation:date_creation, 
+            forme_juridique:forme_juridique,
+            numero_identification:numero_identification,
+            coordonnee:{
+               telephone:telephoneE,
+               email:emailE,
+               url_du_site:url_du_site
+            }, 
+            secteur_activite:secteur_activite,
+            nombre_salarie:nombre_salarie,
+            chiffre_affaire_annuel:chiffre_affaire_annuel,
+            code:code,
+            
+      })
  try {
     const candidats = await candidat.save();
     return res.status(201).send(candidats);

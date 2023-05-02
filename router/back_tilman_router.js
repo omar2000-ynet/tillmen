@@ -26,6 +26,8 @@ router.post('/profilClient/:id', uploadController.uploadProfilClient);
 router.post('/profilCandidat/:id', uploadController.uploadProfilCandidat);
 
 router.post('/autre/:id',uploadController.acheInscr1);
+router.post('/password/:id',uploadController.password);
+router.post('/passwordClient/:id',uploadController.passwordClient);
 router.post('/metier/:id',uploadController.acheInscrMetier);
 router.post('/service/:id',uploadController.acheInscrService);
 router.post('/langue/:id',uploadController.acheInscrLangue);
@@ -40,7 +42,7 @@ router.get('/licenceC/:id',uploadController.licenceC);
 router.get('/licence/:id',uploadController.licence);
 router.get('/disponible/:id',uploadController.disponible);
 
-//Apdate Client
+//Update Client
 router.post('/rep_quest_secur/:id',uploadController.rep_quest_secur);
 router.post('/projet/:id',uploadController.projet);
 
@@ -55,6 +57,7 @@ router.post('/parcommune',recupereDonnees.parcommune);
 router.post('/parmetieretcommune',recupereDonnees.parmetieretcommune);
 router.post('/parmetieretnomouprenom',recupereDonnees.parmetieretnomouprenom);
 router.post('/nomouprenom',recupereDonnees.nomouprenom);
+router.get('/listMetierEtCommune',recupereDonnees.listMetierEtCommune);
 
 //Suggestion 
 router.post('/suggestion',controlUser.ajouterSuggestion);

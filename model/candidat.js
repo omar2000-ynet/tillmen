@@ -107,7 +107,18 @@ const schemaCandidat = mongoose.Schema({
         type: String,
         trim: true
     },
-    service:[String],
+    services:{
+        type:[
+            {
+                service:{
+                    type:String,
+                    trim: true,
+                    lowercase:true
+                },
+                prix_service: String
+            }
+        ]
+    },
     disponibilite:{
         type: Number,
         trim: true
@@ -175,11 +186,43 @@ const schemaCandidat = mongoose.Schema({
     //pour une entreprise
     nom_entreprise:{ 
         type:String,
-        maxlength: 25,
         lowercase: true,
         trim: true
     },
-    date_creation: Date
+    date_creation: Date,
+    forme_juridique:{ 
+        type:String,
+        lowercase: true,
+        trim: true
+    },
+    numero_identification:{ 
+        type:String,
+        lowercase: true,
+        trim: true
+    },
+    coordonnee:{ 
+        type:{
+            telephone:String,
+            email:{
+                type:String,
+                lowercase: true,
+                trim: true
+            },
+            url_du_site:{
+                type:String,
+                lowercase: true,
+                trim: true
+            }
+        }
+    }, 
+    secteur_activite:{
+            type:String,
+            lowercase: true,
+            trim: true
+    },
+    nombre_salarie:String,
+    chiffre_affaire_annuel:String,
+    code:Number
 },
 {
     timestamps: true,

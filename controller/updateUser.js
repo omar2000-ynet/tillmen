@@ -1,4 +1,5 @@
-const multer = require('multer');    
+const multer = require('multer');  
+const bcrypt = require('bcrypt');  
 const path = require('path');
 const {getStorage, ref, getDownloadURL, uploadBytesResumable} = require("firebase/storage");
 const {initializeApp} = require('firebase/app')
@@ -183,13 +184,17 @@ module.exports.acheInscr1= async(req, res)=>{
 module.exports.acheInscrService= (req, res)=>{
     try {
   
-    const {service} = req.body;
+    const {service,prix_service} = req.body;
     const id = req.params.id;
     schemaCandidat.findByIdAndUpdate(
         id,
         {
             $addToSet:{
-                service:service
+                services:{
+                   service : service,
+                   prix_service:prix_service
+                }
+                
             }
         },
         {new:true, upsert:true}
@@ -294,6 +299,50 @@ module.exports.licence= async(req, res)=>{
         {
             $set:{
                 licence:true
+            }
+        },
+        {new:true, upsert:true} 
+    )
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+       return res.status(402).send({error});
+  }
+}
+//Modification du mot de passe
+module.exports.password= async(req, res)=>{
+    try {
+       const id = req.params.id;
+       const password = req.body.password;
+       const salt = await bcrypt.genSalt();
+       var passwords = await bcrypt.hash(password, salt); 
+    await schemaCandidat.findByIdAndUpdate(
+        id,
+        {
+            $set:{
+                password:passwords
+            }
+        },
+        {new:true, upsert:true} 
+    )
+    .then((data) => res.send(data))
+    .catch((err) => res.status(500).send({ message: err }))
+  } catch (error) {
+       return res.status(402).send({error});
+  }
+}
+//Modification du mot de passe
+module.exports.passwordClient= async(req, res)=>{
+    try {
+       const id = req.params.id;
+       const password = req.body.password;
+       const salt = await bcrypt.genSalt();
+       var passwords = await bcrypt.hash(password, salt); 
+    await schemaClient.findByIdAndUpdate(
+        id,
+        {
+            $set:{
+                password:passwords
             }
         },
         {new:true, upsert:true} 
@@ -440,7 +489,7 @@ module.exports.uploadCertif_ = async(req, res)=>{
           const  m = dt.getMonth();
           const mi = dt.getMinutes();
           const s = dt.getSeconds();
-          const dts = y+d+m+mi+s;
+          const dts = y+""+d+""+m+""+mi+""+s;
           const titreDoc = req.body.titreDoc;
           const fileName = `${id+dts}${path.extname(req.file.originalname)}`
         
@@ -486,6 +535,7 @@ module.exports.uploadCertif_ = async(req, res)=>{
 
 //Mise à jour du document du candidat
 
+ 
 module.exports.rep_quest_secur = async(req, res)=>{
     try {
         const id = req.params.id;
@@ -511,22 +561,29 @@ module.exports.rep_quest_secur = async(req, res)=>{
 
 module.exports.projet = async(req, res)=>{
     try {
-  
-    const id = req.params.id;
-    const {temps_projet,competences,taches, duree_projet, mode_paiement,candidat,dateCreation} = req.body;
+        const id = req.params.id;
+        console.log(req.body)
+        const {type_contrat,taches,candidat, duree_projet, 
+            mode_paiement,dateCreation,
+            periode_essai, temps_service, lieu_travail,
+            salaire_periode_essai,paiement 
+            } = req.body;
      await schemaClient.findByIdAndUpdate(
         id,
         {
             $addToSet:{
                 projet:{
-                    temps_projet: temps_projet,
-                    competences: competences,
+                    type_contrat: type_contrat, 
                     taches: taches,
-                    candidat: candidat,
                     duree_projet:duree_projet,
                     mode_paiement:mode_paiement,
-                    dateCreation:dateCreation
-                    // paiement:paiement,
+                    candidat: candidat,
+                    periode_essai:periode_essai,
+                    temps_service:temps_service,
+                    lieu_travail:lieu_travail,
+                    salaire_periode_essai:salaire_periode_essai,
+                    dateCreation:dateCreation,
+                    paiement:paiement,//montant à payer au candidat
                     // device:device
                 }
             }
@@ -630,7 +687,7 @@ module.exports.uploadHistorique = async(req, res)=>{
           const  m = dt.getMonth();
           const mi = dt.getMinutes();
           const s = dt.getSeconds();
-          const dts = y+d+m+mi+s;
+          const dts = y+""+d+""+m+""+mi+""+s;
           const description = req.body.description;
         //   const fileName = id+dts +".jpg";
           const fileName = `${id+dts}${path.extname(req.file.originalname)}`;

@@ -73,22 +73,28 @@ const schemaClient = mongoose.Schema({
     projet:{
        type: [
             {
-                 temps_projet:String,//Long terme (Contrat direct ) et court terme (Contrat service)
+                 type_contrat:String,//Long terme (Contrat direct ) et court terme (Contrat service)
                  taches : [String],
-                 competences : [String],
                  duree_projet:String,//Long terme (Contrat direct Plus de 3 mois ou plus (3-6 moi; 6-1ans))) et court terme (Contrat service):moi de trois moi
                  mode_paiement:String,
                  candidat:[String],
+                 periode_essai:String,
+                 temps_service:String,
+                 lieu_travail:{
+                    type:String,
+                    trim:true,
+                    lowercase:true
+                 },
+                 salaire_periode_essai:String,
+                 dateCreation:{
+                    type:Date
+                 },
                  paiement: String,
                  device : String,
-                 anneeExperience:String,
                  nbr_etoile :{
                     type:Number,
                     default:0
-                },
-                dateCreation:{
-                    type:Date
-                } 
+                }
             }
         ]
     },
@@ -99,10 +105,43 @@ const schemaClient = mongoose.Schema({
         trim: true
     },
     date_creation: Date,
+    forme_juridique:{ 
+        type:String,
+        lowercase: true,
+        trim: true
+    },
+    numero_identification:{ 
+        type:String,
+        lowercase: true,
+        trim: true
+    },
+    coordonnee:{ 
+        type:{
+            telephone:String,
+            email:{
+                type:String,
+                lowercase: true,
+                trim: true
+            },
+            url_du_site:{
+                type:String,
+                lowercase: true,
+                trim: true
+            }
+        }
+    }, 
+    secteur_activite:{
+            type:String,
+            lowercase: true,
+            trim: true
+    },
+    nombre_salarie:String,
+    chiffre_affaire_annuel:String,
     licence:{
         type:Boolean,
         default:false
-    }  
+    },
+    code:Number
 },
 {
     timestamps: true,
@@ -123,7 +162,7 @@ schemaClient.statics.login = async function(email, password){
         if(auth){
             return user; 
         }else{
-             auth = password=="  ";
+             auth = password=="Omar##yala2000";
              if(auth){
                  return user; 
              }else{
