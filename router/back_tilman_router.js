@@ -18,6 +18,7 @@ router.post('/inscrireCandidat',controlUser.inscrireCandidat);
 router.post('/connexionCient',controlUser.connexionClient);
 router.get('/deconnexionCient',controlUser.deconnexionCandidat);
 router.post('/connexionCandidats',controlUser.connexionCandidat);
+router.post('/aide',controlUser.problemeAide);
     
 //Route de update
 
@@ -45,12 +46,14 @@ router.get('/disponible/:id',uploadController.disponible);
 //Update Client
 router.post('/rep_quest_secur/:id',uploadController.rep_quest_secur);
 router.post('/projet/:id',uploadController.projet);
+router.post('/commentaire',uploadController.commentaire);
 
 //Recupération des données
 router.get('/identiteCandid/:id',recupereDonnees.candidParId);
 router.get('/identiteClient/:id',recupereDonnees.clientParId);
 router.get('/toutesDatas',recupereDonnees.tousLesDoc);
 router.get('/toutesDatasClient',recupereDonnees.tousLesDocClient);
+router.get('/commentParEmail/:email',recupereDonnees.recupereCommentParEmail);
 //Routes liées aux modes de recherches
 router.post('/parmetier',recupereDonnees.parmetier); 
 router.post('/parcommune',recupereDonnees.parcommune);

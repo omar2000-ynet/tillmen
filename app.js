@@ -14,10 +14,10 @@ const corsOptions = {
     origin: ['https://till-2f088.web.app','http://localhost:3000'],   
     credentials: true,   
     // 'allowedHeaders': ['sessionId', 'Content-Type'],
-    // 'exposedHeaders': ['sessionId'],
+    // 'exposedHeaders': ['sessionId'],     
     // 'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
     // 'preflightContinue': false 
-}     
+}         
 app.use(cors(corsOptions)); 
 app.use(json()) 
 app.use(urlencoded({extended:true}))

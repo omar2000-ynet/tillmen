@@ -1,6 +1,7 @@
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat'); 
 const schemaSuggest = require('../model/suggest'); 
+const schemaProblemeAide = require('../model/problemeAide');
 const jwt = require('jsonwebtoken');
 
  const ControlErrs = require('../utile/ControlErreur');
@@ -303,5 +304,21 @@ module.exports.ajouterSuggestion = async(req, res)=>{
    }
    } catch (error) {
       res.send(error)  
+   }
+  }
+
+  module.exports.problemeAide = async(req, res)=>{
+   const {email, probleme, dateAide} = req.body;
+   try {
+           const problemo = await new schemaProblemeAide({
+               email:email,
+               probleme:probleme,
+               dateAide:dateAide
+           });
+
+           const prosaveData = await problemo.save();
+            return res.send((prosaveData));
+   } catch (error) {
+        return res.send(error);
    }
   }

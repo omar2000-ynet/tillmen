@@ -6,6 +6,7 @@ const {initializeApp} = require('firebase/app')
 const config = require('../config/firebase.config');
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat');
+const schemaComment = require('../model/CommentaireClientForCandidat');
 //Ajout des images de profiles pour le client et le candidat
 
 //Initialisation de l'application firebase
@@ -730,5 +731,29 @@ module.exports.uploadHistorique = async(req, res)=>{
       return res.status(402).send({error})
   }
 }
-
-
+module.exports.commentaire = async(req, res)=>{ 
+    try {
+        const dateActuelle = new Date()
+          const {idProjet ,emailCandit,picture, nom, prenom, commentaire, dateComment, score} = req.body;
+          const comment = await new schemaComment({
+                commentaire: commentaire,
+                emailCandit:emailCandit,
+                client: {
+                    picture : picture,
+                    nom:nom,
+                    prenom:prenom
+                },
+                idProjet:idProjet,
+                dateComment: dateComment,
+                score: score
+          })
+          try {
+               const comm = await comment.save();
+               return res.send(comm);
+          } catch (error) {
+              return res.send(error)
+          }
+    } catch (error) {
+         return res.send(error)
+    }
+}

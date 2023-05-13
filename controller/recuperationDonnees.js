@@ -1,5 +1,6 @@
 const schemaClient = require('../model/client');
 const schemaCandidat = require('../model/candidat');
+const schemaComment = require('../model/CommentaireClientForCandidat');
 
 //  Création d'une expression regulière générale de nos requettes
 const exp =(exp)=>{
@@ -228,4 +229,18 @@ module.exports.listMetierEtCommune=async(req, res)=>{
     } catch (error) {
         res.send(error);
     }
+}
+module.exports.recupereCommentParEmail = async(req, res)=>{
+     try {
+          const email = req.params.email;
+          const data= await schemaComment.find({'emailCandit':email});
+          var o = data?.length -1;
+          const dataSend = [];
+          for (let i = o; i >= 0; i--) {
+               dataSend.push(data[i]);
+          }
+          return res.send(dataSend);
+     } catch (error) {
+          return res.send(error)
+     }
 }

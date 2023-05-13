@@ -8,4 +8,3 @@ mongoose
 })
 .then(()=>console.log("Connecté à mongoDB"))
 .catch((err)=>console.log("La connexion à mongodb a échoué"));
-   
