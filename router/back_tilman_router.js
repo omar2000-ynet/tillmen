@@ -42,6 +42,7 @@ router.post('/certificat/:id',uploadController.uploadCertif_);
 router.get('/licenceC/:id',uploadController.licenceC);
 router.get('/licence/:id',uploadController.licence);
 router.get('/disponible/:id',uploadController.disponible);
+router.post('/valide',uploadController.validerProjet);
 
 //Update Client
 router.post('/rep_quest_secur/:id',uploadController.rep_quest_secur);

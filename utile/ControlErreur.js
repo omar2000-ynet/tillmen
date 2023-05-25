@@ -7,7 +7,7 @@ module.exports.ControlErr = (err) => {
         genre:"",                  
         lieu_naiss:"",
         date_naiss:"",
-        telephone:"",  
+        telephone:"", 
         email:"",
         password:""
       };

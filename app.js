@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 const path = require('path');
 // https://meet.google.com/tmv-hhko-uce?pli=1
 const app = express();              
-app.use(cookieParser());             
+app.use(cookieParser());                       
 const corsOptions = {                                        
     origin: ['https://till-2f088.web.app','http://localhost:3000'],   
     credentials: true,   

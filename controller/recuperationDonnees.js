@@ -232,6 +232,16 @@ module.exports.listMetierEtCommune=async(req, res)=>{
 }
 module.exports.recupereCommentParEmail = async(req, res)=>{
      try {
+        var dt =new Date();
+        const y = dt.getFullYear();
+        const d = dt.getDate();
+        const  m = dt.getMonth();
+        const mi = dt.getMinutes();
+        const s = dt.getSeconds();
+        const dts = y+""+d+""+m+""+mi+""+s;
+        console.log(dts)
+
+
           const email = req.params.email;
           const data= await schemaComment.find({'emailCandit':email});
           var o = data?.length -1;
@@ -243,4 +253,5 @@ module.exports.recupereCommentParEmail = async(req, res)=>{
      } catch (error) {
           return res.send(error)
      }
+
 }

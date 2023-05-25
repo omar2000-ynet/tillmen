@@ -4,7 +4,7 @@
   "description": "tillman project",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "start",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
@@ -19,7 +19,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
+    "express": "^4.18.2", 
     "firebase": "^9.19.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.6.7",

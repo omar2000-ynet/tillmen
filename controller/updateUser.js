@@ -474,6 +474,7 @@ var uploadCertif = multer(
       limits:{fileSize:maxsize1}
 }).single('image');
 
+
 module.exports.uploadCertif_ = async(req, res)=>{
     try {
   
@@ -756,4 +757,31 @@ module.exports.commentaire = async(req, res)=>{
     } catch (error) {
          return res.send(error)
     }
+}
+module.exports.validerProjet = async(req, res)=>{
+      try {
+          const {idclient, idprojet} = req.body;
+          console.log(req.body);
+          schemaClient.update(
+            {
+                _id:idclient,
+                "projet._id":idprojet
+            },
+            {
+                $set:{
+                  "projet.$.valider":true
+               } 
+            },
+            {
+                new:true,upsert:true
+            }
+          ).then((data)=>{
+            return res.send(data)
+          }).catch((err)=>{
+            return res.send(err)
+          })
+      } catch (error) {
+          return res.send(error);
+      }
+
 }

@@ -94,6 +94,10 @@ const schemaClient = mongoose.Schema({
                  nbr_etoile :{
                     type:Number,
                     default:0
+                },
+                valider: {
+                    type:Boolean,
+                    default:false
                 }
             }
         ]
