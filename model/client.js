@@ -90,7 +90,8 @@ const schemaClient = mongoose.Schema({
                     type:Date
                  },
                  paiement: String,
-                 device : String,
+                 devise : String,
+                 totalapayer:String,
                  nbr_etoile :{
                     type:Number,
                     default:0

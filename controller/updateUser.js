@@ -568,7 +568,7 @@ module.exports.projet = async(req, res)=>{
         const {type_contrat,taches,candidat, duree_projet, 
             mode_paiement,dateCreation,
             periode_essai, temps_service, lieu_travail,
-            salaire_periode_essai,paiement 
+            salaire_periode_essai,paiement,devise,totalapayer 
             } = req.body;
      await schemaClient.findByIdAndUpdate(
         id,
@@ -586,7 +586,8 @@ module.exports.projet = async(req, res)=>{
                     salaire_periode_essai:salaire_periode_essai,
                     dateCreation:dateCreation,
                     paiement:paiement,//montant à payer au candidat
-                    // device:device
+                    devise:devise,
+                    totalapayer:totalapayer 
                 }
             }
         },
