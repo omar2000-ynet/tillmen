@@ -5,7 +5,19 @@ const schemaProblemeAide = require('../model/problemeAide');
 const jwt = require('jsonwebtoken');
 
  const ControlErrs = require('../utile/ControlErreur');
-
+//  console.log('Omar')
+//  const t = ()=>{
+//    for(let i = 0;i<=9;i++){
+//       for(let j = 0;j<=9;j++){
+//          for(let k = 0;k<=9;k++){
+//             for(let l = 0;l<=9;l++){
+//                   console.log(`${i}, ${j},${k},${l}`);
+//             }
+//          }
+//       }
+//    }
+// } 
+// t();
 module.exports.inscrireClient = async(req, res)=>{
    try {
   
@@ -93,10 +105,10 @@ module.exports.inscrireClientEntreprise = async(req, res)=>{
 }
 //Inscription Candidat
 module.exports.inscrireCandidat = async(req, res)=>{
-   try {
+try {
       
- const {nom, prenom, genre, lieu_naiss, date_naiss, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_vilage,num_parc, password} = req.body;
- var dt =new Date();
+   const {nom, prenom, genre, lieu_naiss, date_naiss, email,telephone,pays,province,ville_territoire,commune_secteur,quartier_groupement,avenue_vilage,num_parc, password} = req.body;
+   var dt =new Date();
    const y = dt.getFullYear();
    const d = dt.getDate();
    const  m = dt.getMonth();
@@ -107,7 +119,7 @@ module.exports.inscrireCandidat = async(req, res)=>{
     nom:nom, 
     prenom:prenom, 
     genre:genre,     
-    lieu_nais:lieu_naiss, 
+    lieu_naiss:lieu_naiss, 
     date_naiss:date_naiss, 
     email:email, 
     telephone: telephone,  
@@ -152,7 +164,6 @@ module.exports.inscrireCandidatEntreprise = async(req, res)=>{
          const s = dt.getSeconds();
          const code = y+""+d+""+m+""+mi+""+s;
       const candidat = await new schemaCandidat({
-            
             nom :nom,
             prenom: prenom,
             genre:genre,

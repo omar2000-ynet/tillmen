@@ -31,6 +31,22 @@ var upload = multer(
        },
        limits:{fileSize:maxsize}
          }).single('image');
+var uploadHist = multer( 
+     {
+       storage:multer.memoryStorage(),
+       fileFilter:(req, file,cb)=>{
+          console.log(file)
+         if(file.mimetype == "image/jpg" ||
+             file.mimetype == "image/png" ||
+             file.mimetype == "image/jpeg"){
+             cb(null, true)
+         }else{
+             cb(null, false);
+             cb(new Error("Format invalid"));
+         }
+       },
+       limits:{fileSize:maxsize}
+         }).single('image');
 
 module.exports.uploadProfilClient = async(req, res)=>{
     try {
@@ -204,7 +220,6 @@ module.exports.acheInscrService= (req, res)=>{
   } catch (error) {
       return res.status(402).send({error});
   }
-
 }
 module.exports.acheInscrLangue= (req, res)=>{
     try {
@@ -676,7 +691,7 @@ module.exports.modification2= async(req, res)=>{
 //Historique
 module.exports.uploadHistorique = async(req, res)=>{
     try {
-    upload(req, res, async(err)=>{
+    uploadHistl(req, res, async(err)=>{
       if(err instanceof multer.MulterError){
           res.status(352).send(err);
       }else if(err){ 

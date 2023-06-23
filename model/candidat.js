@@ -222,7 +222,8 @@ const schemaCandidat = mongoose.Schema({
     },
     nombre_salarie:String,
     chiffre_affaire_annuel:String,
-    code:Number
+    code:Number,
+    
 },
 {
     timestamps: true,
